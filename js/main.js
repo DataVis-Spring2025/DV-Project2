@@ -1,4 +1,4 @@
-d3.csv("data/2024-2025.csv") //**** TO DO  switch this to loading the quakes 'data/2024-2025.csv'
+d3.csv("data/2024-2025.csv")
   .then((data) => {
     console.log("number of items: " + data.length);
 
@@ -9,6 +9,9 @@ d3.csv("data/2024-2025.csv") //**** TO DO  switch this to loading the quakes 'da
     });
 
     // Initialize chart and then show it
-    leafletMap = new LeafletMap({ parentElement: "#my-map" }, data);
+    const leafletMap = new LeafletMap({ parentElement: "#my-map" }, data);
+
+    // Initialize timeline with leafletMap
+    const timeline = new Timeline(leafletMap);
   })
   .catch((error) => console.error(error));

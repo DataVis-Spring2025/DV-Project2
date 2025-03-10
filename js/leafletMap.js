@@ -76,7 +76,7 @@ class LeafletMap {
       .join("circle")
       .attr("fill", (d) => {
         return vis.magnitudeColorScale(+d.mag);
-      }) //---- TO DO- color by magnitude
+      })
       .attr("stroke", "black")
       //Leaflet has to take control of projecting points.
       //Here we are feeding the latitude and longitude coordinates to
@@ -151,7 +151,9 @@ class LeafletMap {
         "cy",
         (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).y
       )
-      .attr("fill", "steelblue") //---- TO DO- color by magnitude
+      .attr("fill", (d) => {
+        return vis.magnitudeColorScale(+d.mag);
+      })
       .attr("r", 3);
   }
 
