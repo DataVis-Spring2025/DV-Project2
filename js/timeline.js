@@ -110,8 +110,3 @@ class Timeline {
         }
     }
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    const leafletMap = {}; // Placeholder for the actual leaflet map object
-    new Timeline(leafletMap);
-});
