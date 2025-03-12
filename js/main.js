@@ -14,6 +14,7 @@ d3.csv("data/2024-2025.csv")
     lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" }, data);
 
     // Initialize timeline with leafletMap
-    const timeline = new Timeline(leafletMap);
+    const timeline = new Timeline(leafletMap, data);
+    console.log(data);
   })
   .catch((error) => console.error(error));

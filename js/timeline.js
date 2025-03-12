@@ -1,36 +1,48 @@
+const playIcon = `<i class="bi bi-play-fill"></i>`
+const pauseIcon = `<i class="bi bi-pause-fill"></i>`
+
 class Timeline {
-    constructor(leafletMap) {
+    constructor(leafletMap, data) {
         this.leafletMap = leafletMap;
+        this.data = data;
         this.isPlaying = false;
         this.isDragging = false;
         this.dragType = null;
         this.startX = 0;
         this.startWidth = 0;
         this.startLeft = 0;
+        this.padding = 50;
+        this.width = window.innerWidth - this.padding * 2;
+        this.height = 50;
+        this.tickSpacing = 100;
+        this.tickFormat = "%b %Y"; // %B month, %Y Year 
 
         this.initTimeline();
     }
 
+    // create all the html elements and setup event listeners
     initTimeline() {
         const timelineContainer = document.querySelector('#timeline');
         timelineContainer.style.position = 'relative';
         timelineContainer.style.width = '100%';
-        timelineContainer.style.height = '50px';
+        timelineContainer.style.height = this.height + 'px';
         timelineContainer.style.border = '1px solid #ccc';
         timelineContainer.style.margin = '20px 0';
 
+        // silly toggle guy
         const playPauseButton = document.createElement('button');
-        playPauseButton.innerText = 'Play';
+        playPauseButton.innerHTML = playIcon;
         playPauseButton.style.position = 'absolute';
         playPauseButton.style.left = '10px';
         playPauseButton.style.top = '10px';
 
+        // Make custom range element
         const range = document.createElement('div');
         range.style.position = 'absolute';
         range.style.left = '50px';
         range.style.top = '10px';
         range.style.width = '200px';
-        range.style.height = '30px';
+        timelineContainer.style.height = this.height + 'px';
         range.style.backgroundColor = '#ddd';
         range.style.cursor = 'pointer';
 
@@ -63,11 +75,52 @@ class Timeline {
         range.addEventListener('mousedown', (e) => this.startDrag(e, 'move', range));
         document.addEventListener('mousemove', (e) => this.onDrag(e, range));
         document.addEventListener('mouseup', () => this.endDrag());
+
+        // use d3 to make a time scale
+        // Parse the ISO-formatted timestamps
+        const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
+
+        // Convert data.time strings to Date objects
+        const timeValues = this.data.map(d => parseTime(d.time));
+
+        // Create the time scale
+        const timeScale = d3.scaleTime()
+            .domain(d3.extent(timeValues))
+            .range([0, this.width]); // Replace width with your desired pixel value
+
+        // Create the axis with a label
+        const xAxis = d3.axisBottom(timeScale)
+        .tickFormat(d3.timeFormat(this.tickFormat)) // still format
+        .tickValues([ // shows more ticks depending on screen size
+            timeScale.domain()[0],
+            ...timeScale.ticks(Math.max(1, Math.floor(this.width / this.tickSpacing))),
+            timeScale.domain()[1]
+        ]);
+
+        const svg = d3.select(timelineContainer)
+        .append("svg")
+        .attr("width", this.width)
+        .attr("height", this.height)
+        .style("margin-left", this.padding + "px")
+        .style("overflow", "visible")
+        .attr("transform", `translate(0,${this.height})`);
+
+        const xAxisG = svg.append("g") // Position at bottom
+        .call(xAxis);
+
+        xAxisG.append("text")
+        .attr("y", 30) // Move label below axis
+        .attr("x", this.width / 2) // Center label
+        .attr("text-anchor", "middle");
+
+        // Remove the last tick mark after rendering (prevent overlap)
+        const ticks = xAxisG.selectAll(".tick");
+        ticks.filter((_, i) => i === ticks.size() - 2).remove();
     }
 
     togglePlayPause(button) {
         this.isPlaying = !this.isPlaying;
-        button.innerText = this.isPlaying ? 'Pause' : 'Play';
+        button.innerHTML = this.isPlaying ? pauseIcon : playIcon;
         //unimplemented: handle play/pause toggle
         this.leafletMap.updateVis();
     }
