@@ -2,9 +2,9 @@ const playIcon = `<i class="bi bi-play-fill"></i>`
 const pauseIcon = `<i class="bi bi-pause-fill"></i>`
 
 class Timeline {
-    constructor(leafletMap, data) {
-        this.leafletMap = leafletMap;
+    constructor(data) {
         this.data = data;
+        this.filter = () => {console.log("timeline filter called before override")};
         this.isPlaying = false;
         this.isDragging = false;
         this.dragType = null;
@@ -16,6 +16,8 @@ class Timeline {
         this.height = 50;
         this.tickSpacing = 100;
         this.tickFormat = "%b %Y"; // %B month, %Y Year 
+        this.minDate = new Date('1000-01-01T00:00:00.000Z');
+        this.maxDate = new Date('9999-01-01T00:00:00.000Z');
 
         this.initTimeline();
     }
@@ -40,9 +42,8 @@ class Timeline {
         const range = document.createElement('div');
         range.style.position = 'absolute';
         range.style.left = '50px';
-        range.style.top = '10px';
         range.style.width = '200px';
-        timelineContainer.style.height = this.height + 'px';
+        range.style.height = this.height + 'px';
         range.style.backgroundColor = '#ddd';
         range.style.cursor = 'pointer';
 
@@ -122,10 +123,12 @@ class Timeline {
         this.isPlaying = !this.isPlaying;
         button.innerHTML = this.isPlaying ? pauseIcon : playIcon;
         //unimplemented: handle play/pause toggle
-        this.leafletMap.updateVis();
+        this.filter();
     }
 
     startDrag(e, type, range) {
+        // ignore range drag if draggin a side handle
+        if(this.isDragging && this.type !== 'move') return; 
         this.isDragging = true;
         this.dragType = type;
         this.startX = e.clientX;
@@ -139,27 +142,49 @@ class Timeline {
         const dx = e.clientX - this.startX;
 
         if (this.dragType === 'left') {
-            const newLeft = this.startLeft + dx;
-            const newWidth = this.startWidth - dx;
+            let newLeft = this.startLeft + dx;
+            let newWidth = this.startWidth - dx;
+            if (newLeft < this.padding) {
+                newLeft = this.padding;
+                newWidth = this.startWidth + (this.startLeft - this.padding);
+            }
             if (newWidth > 0) {
                 range.style.left = newLeft + 'px';
                 range.style.width = newWidth + 'px';
             }
         } else if (this.dragType === 'right') {
-            const newWidth = this.startWidth + dx;
+            let newWidth = this.startWidth + dx;
+            if ((this.startLeft + newWidth) > (this.width + this.padding)) {
+                newWidth = (this.width + this.padding) - this.startLeft;
+            }
             if (newWidth > 0) {
                 range.style.width = newWidth + 'px';
             }
         } else if (this.dragType === 'move') {
-            range.style.left = this.startLeft + dx + 'px';
+            let newLeft = this.startLeft + dx;
+            if (newLeft < this.padding) {
+                newLeft = this.padding;
+            } else if ((newLeft + range.offsetWidth) > (this.width + this.padding)) {
+                newLeft = (this.width + this.padding) - range.offsetWidth;
+            }
+            range.style.left = newLeft + 'px';
         }
+
+        // update min/max
+        const rangeWidth = range.offsetWidth;
+        const left = range.offsetLeft;
+        const right = left + rangeWidth;
+        const totalWidth = this.width + this.padding * 2;
+        const minDate = d3.min(this.data, d => new Date(d.time));
+        const maxDate = d3.max(this.data, d => new Date(d.time));
+        this.minDate = new Date(minDate.getTime() + (left - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
+        this.maxDate = new Date(minDate.getTime() + (right - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
     }
 
     endDrag() {
         if (this.isDragging) {
             this.isDragging = false;
-            //unimplemented: handle drag end
-            this.leafletMap.updateVis();
+            this.filter();
         }
     }
 }

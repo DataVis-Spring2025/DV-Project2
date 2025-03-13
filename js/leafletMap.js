@@ -138,23 +138,24 @@ class LeafletMap {
   updateVis() {
     let vis = this;
 
-    //want to see how zoomed in you are?
-    // console.log(vis.map.getZoom()); //how zoomed am I?
-    //----- maybe you want to use the zoom level as a basis for changing the size of the points... ?
-
-    //redraw based on new zoom- need to recalculate on-screen position
-    vis.Dots.attr(
-      "cx",
-      (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).x
-    )
+    // Re-bind the data to the circles
+    vis.Dots = vis.svg
+      .selectAll("circle")
+      .data(vis.data)
+      .join("circle")
+      .attr("fill", (d) => {
+        return vis.magnitudeColorScale(+d.mag);
+      })
+      .attr("stroke", "black")
+      .attr(
+        "cx",
+        (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).x
+      )
       .attr(
         "cy",
         (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).y
       )
-      .attr("fill", (d) => {
-        return vis.magnitudeColorScale(+d.mag);
-      })
-      .attr("r", 3);
+      .attr("r", (d) => 3);
   }
 
   renderVis() {
