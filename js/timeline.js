@@ -18,6 +18,9 @@ class Timeline {
         this.tickFormat = "%b %Y"; // %B month, %Y Year 
         this.minDate = new Date('1000-01-01T00:00:00.000Z');
         this.maxDate = new Date('9999-01-01T00:00:00.000Z');
+        this.speed = 30000; // 30 seconds
+        this.playInterval = null;
+        this.speedMultiplier = 1;
 
         this.initTimeline();
     }
@@ -70,12 +73,22 @@ class Timeline {
         timelineContainer.appendChild(playPauseButton);
         timelineContainer.appendChild(range);
 
+        // Speed control button
+        const speedButton = document.createElement('button');
+        speedButton.innerHTML = 'x1';
+        speedButton.style.position = 'absolute';
+        speedButton.style.right = '10px';
+        speedButton.style.top = '10px';
+
+        timelineContainer.appendChild(speedButton);
+
         playPauseButton.addEventListener('click', () => this.togglePlayPause(playPauseButton));
         leftHandle.addEventListener('mousedown', (e) => this.startDrag(e, 'left', range));
         rightHandle.addEventListener('mousedown', (e) => this.startDrag(e, 'right', range));
         range.addEventListener('mousedown', (e) => this.startDrag(e, 'move', range));
         document.addEventListener('mousemove', (e) => this.onDrag(e, range));
         document.addEventListener('mouseup', () => this.endDrag());
+        speedButton.addEventListener('click', () => this.toggleSpeed(speedButton));
 
         // use d3 to make a time scale
         // Parse the ISO-formatted timestamps
@@ -122,7 +135,67 @@ class Timeline {
     togglePlayPause(button) {
         this.isPlaying = !this.isPlaying;
         button.innerHTML = this.isPlaying ? pauseIcon : playIcon;
-        //unimplemented: handle play/pause toggle
+        if (this.isPlaying) {
+            this.startPlaying();
+        } else {
+            this.stopPlaying();
+        }
+        this.filter();
+    }
+
+    toggleSpeed(button) {
+        if (this.speedMultiplier === 1) {
+            this.speedMultiplier = 2;
+            button.innerHTML = 'x2';
+        } else if (this.speedMultiplier === 2) {
+            this.speedMultiplier = 3;
+            button.innerHTML = 'x3';
+        } else {
+            this.speedMultiplier = 1;
+            button.innerHTML = 'x1';
+        }
+    }
+
+    // move the range to the right by 1 pixel every interval
+    startPlaying() {
+        if (this.playInterval) return;
+
+        const range = document.querySelector('#timeline div');
+        if (range.offsetLeft + range.offsetWidth >= this.width + this.padding) {
+            range.style.left = this.padding + 'px';
+        }
+
+        this.playInterval = setInterval(() => {
+            let newLeft = range.offsetLeft + this.speedMultiplier;
+            // once it hits the end, stop playing
+            if (newLeft + range.offsetWidth > this.width + this.padding) {
+                this.stopPlaying();
+                range.style.left = this.width + this.padding - range.offsetWidth + 'px';
+                this.togglePlayPause(document.querySelector('#timeline button'));
+            } else {
+                // move the range to the right
+                range.style.left = newLeft + 'px';
+            }
+            // update min/max and re-run leafletMap filter
+            this.updateDateRange(range);
+        }, this.speed / (this.width + this.padding));
+    }
+
+    stopPlaying() {
+        // clean up interval to pause animation
+        clearInterval(this.playInterval);
+        this.playInterval = null;
+    }
+
+    updateDateRange(range) {
+        const rangeWidth = range.offsetWidth;
+        const left = range.offsetLeft;
+        const right = left + rangeWidth;
+        const totalWidth = this.width + this.padding * 2;
+        const minDate = d3.min(this.data, d => new Date(d.time));
+        const maxDate = d3.max(this.data, d => new Date(d.time));
+        this.minDate = new Date(minDate.getTime() + (left - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
+        this.maxDate = new Date(minDate.getTime() + (right - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
         this.filter();
     }
 
@@ -134,6 +207,7 @@ class Timeline {
         this.startX = e.clientX;
         this.startWidth = range.offsetWidth;
         this.startLeft = range.offsetLeft;
+        this.stopPlaying();
     }
 
     onDrag(e, range) {
@@ -179,6 +253,7 @@ class Timeline {
         const maxDate = d3.max(this.data, d => new Date(d.time));
         this.minDate = new Date(minDate.getTime() + (left - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
         this.maxDate = new Date(minDate.getTime() + (right - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
+        this.updateDateRange(range);
     }
 
     endDrag() {
