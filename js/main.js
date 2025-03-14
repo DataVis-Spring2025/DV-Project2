@@ -31,7 +31,9 @@ d3.csv("data/2024-2025.csv")
       });
       
       leafletMap.data = filteredData;
+      lineChart.data = filteredData;
       leafletMap.updateVis();
+      lineChart.updateChart();
     };
 
     timeline.filter = filter;
