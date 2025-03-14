@@ -3,24 +3,31 @@
 <head>
     <title>Interactive map with Leaflet</title>
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
-    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/libraries/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/libraries/bootstrap.css">
+    <link rel="stylesheet" href="css/libraries/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div id="my-map"></div>
-    <div id="level3">
-        <div id="magnitudeChart"></div>
-        
-    </div>
-    <script src="js/d3.v6.min.js"></script>
-    <script src="js/leaflet.js"></script>
-
-
-    <script src="js/main.js"></script>
-    <script src="js/leafletMap.js"></script>
 
     <div id="tooltip"></div>
     <div id="timeline"></div>
+    <div id="level3">
+        <div id="magnitudeChart"></div>
+    </div>
+
+    <!-- library scripts -->
+    <script src="js/libraries/d3.v6.min.js"></script>
+    <script src="js/libraries/leaflet.js"></script>
+    <script src="js/libraries/jquery-3.7.1.min.js"></script>
+    <script src="js/libraries/jquery-ui.min.js"></script>
+    <script src="js/libraries/popper.min.js"></script>
+    <script src="js/libraries/bootstrap.min.js"></script>
+
+    <!-- our scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/leafletMap.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/magnitudeChart.js"></script>
 
