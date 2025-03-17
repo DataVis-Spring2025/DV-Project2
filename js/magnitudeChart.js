@@ -21,7 +21,7 @@ class MagnitudeChart {
     // Tooltip
     vis.tooltip = d3.select(vis.parentElement)
       .append("div")
-      .attr("class", "tooltip")
+      .attr("class", "tooltip1")
       .style("position", "absolute")
       .style("background", "#fff")
       .style("border", "1px solid #ccc")

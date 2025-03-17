@@ -18,12 +18,22 @@
         <option value="stamen">Stamen Terrain</option>
         
     </select>
-    
+    <button id="toggleSidebar">Filter Magnitude</button>
+    <div id="sidebar">
+        <h3>Magnitude Filter</h3>
+        <label for="magnitudeSlider">Magnitude: <span id="magValue">1</span></label>
+        
+        <div class="slider-container">
+          <input type="range" id="magnitudeSlider" min="0" max="9" step="0.5" value="1" orient="vertical">
+          <div class="tickmarks"></div>
+        </div>
+      </div>
     <div id="tooltip"></div>
     <div id="timeline"></div>
     <div id="level3">
         <div id="magnitudeChart"></div>
     </div>
+<!-- Collapsible Sidebar -->
 
     <!-- library scripts -->
     <script src="js/libraries/d3.v6.min.js"></script>
