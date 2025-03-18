@@ -58,7 +58,7 @@ d3.csv("data/2024-2025.csv")
 
     // Initialize elements and then show them
     const leafletMap = new LeafletMap({ parentElement: "#my-map" }, data);
-    const lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" }, data);
+    const lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" , magmin,magmax},data);
     const timeline = new Timeline(data);
 
     function filter() {
@@ -78,7 +78,7 @@ d3.csv("data/2024-2025.csv")
       leafletMap.data = filteredData;
       lineChart.data = filteredData;
       leafletMap.updateVis();
-      lineChart.updateChart();
+      lineChart.updateChart(magmin,magmax);
     }
 
     // Call filter when timeline is updated
