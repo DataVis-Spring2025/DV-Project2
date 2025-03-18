@@ -23,7 +23,7 @@
         <option value="stamen">Stamen Terrain</option>
         
     </select>
-    <button id="toggleSidebar">Filter Magnitude</button>
+    <button id="toggleSidebar" class="btn btn-primary">Filter Options</button>
     <div id="sidebar" style="z-index: 2000;">
       <p>
             <label for="magnitude">Magnitude Range:</label>
@@ -35,8 +35,11 @@
             <label for="depth">Depth Range:</label>
             <input type="text" id="depth" readonly="" style="border:0; color:#f6931f; font-weight:bold;">
           </p>
-        <div id="slider-range1" style="height:10px;"></div>
-        <button id="filterButton">Apply Filter</button>
+          <br>
+        <div id="slider-range1" style="height:10px;bottom: 20px;"></div>
+        <div class="d-grid gap-2 col-10 mx-auto">
+          <button id="filterButton" class="btn btn-primary" type="button" style="top: 20px;">Apply Filter</button>
+        </div>
       </div>
     <div id="tooltip"></div>
     <div id="timeline"></div>
