@@ -142,7 +142,7 @@ class LeafletMap {
 
   updateVis() {
     let vis = this;
-
+    this.clearMap();
     // Re-bind the data to the circles
     vis.Dots = vis.svg
       .selectAll("circle")
@@ -168,4 +168,15 @@ class LeafletMap {
 
     //not using right now...
   }
+  clearMap() {
+    // Clear existing layers before adding new ones
+    if (this.map) {
+        this.map.eachLayer((layer) => {
+            if (layer instanceof L.TileLayer) return; // Skip base layers
+            this.map.removeLayer(layer);
+        });
+    }
 }
+}
+
+

@@ -43,18 +43,16 @@
 }
 
 /* Button styling */
-#toggleSidebar {
+/* #toggleSidebar {
   display: block;  /* Ensures it appears on a new line */
-  margin-top: 20px; /* Adds space between the map and button */
-  margin-left: auto; /* Pushes it to the right */
-  margin-right: 20px; /* Keeps some space from the right edge */
-  padding: 10px 15px;
+ 
+  /* padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
   border: none;
   border-radius: 5px;
-  z-index: 1000; /* Ensures it stays above other elements */
-}
+  z-index: 1000;
+} */
 
 /* Make sure it's not affected by floating elements */
 button#toggleSidebar {
@@ -172,4 +170,36 @@ input[type="range"]::-moz-range-thumb {
   left: 15px;
   font-size: 12px;
   color: black;
+}
+
+/* Styling for the tabs */
+.tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tab-list {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.tab {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+}
+
+.tab.active {
+  background-color: #ddd;
+  font-weight: bold;
+}
+
+.tab-content {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 10px;
 }
