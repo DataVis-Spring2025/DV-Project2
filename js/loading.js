@@ -67,6 +67,8 @@ function loadData(url) {
                     d.depth = +d.depth;
                     d.times=+d.time;
                     d.parsedTime = new Date(d.time); // Cache parsed date for faster sorting
+                    d.duration2 = Math.pow(10, (0.5 * d.mag - 1.5)) * d.rms;
+                    d.duration = (new Date(d.updated) - new Date(d.time)) / (1000*60);
                 });
 
                 data.sort((a, b) => a.parsedTime - b.parsedTime);
