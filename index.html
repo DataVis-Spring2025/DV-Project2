@@ -25,11 +25,22 @@
     <div id="sidebar" style="z-index: 2000;"></div>
 
     <div id="tooltip"></div>
-    <div id="timeline">
-    </div>
+    <div id="tooltip2"></div>
+    <div id="tooltip3"></div>
+    <div id="timeline"></div>
+    
     <div id="level3">
         <div id="magnitudeChart"></div>
+        <div id="depthChart" style="display: none;"></div>
+        <div id="durationChart" style="display: none;"></div>
+        <div id="durationChart2" style="display: none;"></div>
     </div>
+    <select id="attribute-select">
+        <option value="magnitude" selected>Magnitude</option>
+        <option value="depth">Depth</option>
+        <option value="duration">Duration</option>
+        <option value="duration2">Duration2</option>
+    </select>
 
     <div id="loading-container" class="loading-container">
         <div class="spinner"></div>
@@ -53,5 +64,10 @@
     <script src="js/leafletMap.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/magnitudeChart.js"></script>
+    <script src="js/depthChart.js"></script>
+    <script src="js/durationChart.js"></script>
+    <script src="js/durationChartV2.js"></script>
+
+
 </body>
 </html>
