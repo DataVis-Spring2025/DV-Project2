@@ -9,7 +9,32 @@ class MagnitudeChart {
     this.initChart();
   }
 
+  initDropdown() {
+    document.getElementById("attribute-select").addEventListener("change", (event) => {
+      const selected = event.target.value;
+
+      // Hide all charts
+      document.getElementById("magnitudeChart").style.display = "none";
+      document.getElementById("depthChart").style.display = "none";
+      document.getElementById("durationChart").style.display = "none";
+      document.getElementById("durationChart2").style.display = "none";
+
+      // Show the selected chart
+      if (selected === "magnitude") {
+          document.getElementById("magnitudeChart").style.display = "block";
+      } else if (selected === "depth") {
+          document.getElementById("depthChart").style.display = "block";
+      } else if (selected === "duration") {
+          document.getElementById("durationChart").style.display = "block";
+      } else if (selected === "duration2") {
+        document.getElementById("durationChart2").style.display = "block";
+      } 
+    });
+  }
+
   initChart() {
+    this.initDropdown();
+    
     let vis = this;
 
     vis.svg = d3.select(vis.parentElement)

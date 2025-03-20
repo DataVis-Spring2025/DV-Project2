@@ -16,9 +16,12 @@ loadData(`data/AllYears/${year}.csv`)
 		setTimeout(() => {
 			const leafletMap = new LeafletMap({ parentElement: "#my-map" }, filteredData);
 			const lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" }, data);
+			const depthChart = new DepthChart({ parentElement: "#depthChart" }, data);
+			const durationChart = new DChart({ parentElement: "#durationChart" }, data);
+			const durationChart2 = new DurationChart({ parentElement: "#durationChart2" }, data);
 
 			// Initialize Filter after visualizations are created
-			const filter = new Filter(data, [leafletMap, lineChart]);
+			const filter = new Filter(data, [leafletMap, lineChart, depthChart, durationChart, durationChart2]);
 
       // Initialize Sidebar with data
       const sidebar = new Sidebar("sidebar", data);
