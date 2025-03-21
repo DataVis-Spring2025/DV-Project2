@@ -17,6 +17,7 @@ class DepthChart {
           .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
           .append("g")
           .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+
       // Tooltip
       vis.tooltip = d3.select(vis.parentElement)
           .append("div")
@@ -53,7 +54,7 @@ class DepthChart {
       });
 
       const x = d3.scaleLinear()
-          .domain([0, 700]) // Fixed upper limit at 700
+          .domain([0, maxDepth]) // Fixed upper limit at 700
           .range([0, vis.width]);
 
       const y = d3.scaleLinear()
@@ -143,7 +144,7 @@ class DepthChart {
 
           vis.tooltip
               .style("display", "block")
-              .html(`Depth: ${closest.depth.toFixed(1)}<br>Count: ${closest.count}`)
+              .html(`Depth: ${closest.depth.toFixed(1)} km<br># of Quakes: ${closest.count}`)
               .style("top", (event.pageY - 10) + "px")
               .style("left", (event.pageX + 10) + "px");
       })
