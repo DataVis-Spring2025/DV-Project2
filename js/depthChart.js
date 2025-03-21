@@ -11,12 +11,13 @@ class DepthChart {
 
   initChart() {
       let vis = this;
+
       vis.svg = d3.select(vis.parentElement)
           .append("svg")
           .attr("width", vis.width + vis.margin.left + vis.margin.right)
           .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
           .append("g")
-          .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+          .attr("transform", `translate(${vis.margin.left},${vis.margin.top})`);
 
       // Tooltip
       vis.tooltip = d3.select(vis.parentElement)
@@ -33,57 +34,18 @@ class DepthChart {
       // Circle marker for hover effect
       vis.hoverCircle = vis.svg.append("circle")
           .attr("r", 5)
-          .attr("fill", "none")  // No fill
-          .attr("stroke", "orange")  // Outline color
+          .attr("fill", "none")
+          .attr("stroke", "orange")
           .attr("stroke-width", 2)
           .style("display", "none");
 
-      vis.updateChart();
-  }
-
-  updateChart() {
-      let vis = this;
-
-      const maxDepth = d3.max(vis.data, d => d.depth);
-
-      const depthCounts = d3.range(0, maxDepth, 5).map(depth => {
-          return {
-              depth: depth,
-              count: vis.data.filter(d => d.depth >= depth && d.depth < depth + 0.1).length
-          };
-      });
-
-      const x = d3.scaleLinear()
-          .domain([0, maxDepth]) // Fixed upper limit at 700
-          .range([0, vis.width]);
-
-      const y = d3.scaleLinear()
-          .domain([0, d3.max(depthCounts, d => d.count)])
-          .nice()
-          .range([vis.height, 0]);
-
-      vis.svg.selectAll("*:not(circle)").remove();
-
-      let xTicks = x.ticks(10);
-
-      // Ensure the next highest tick above maxDepth is included, but not maxDepth itself
-      let nextTickAboveMax = xTicks.find(tick => tick > maxDepth);
-      xTicks = xTicks.filter(tick => tick !== maxDepth);
-
-      if (nextTickAboveMax && !xTicks.includes(nextTickAboveMax)) {
-          xTicks.push(nextTickAboveMax);
-      }
-
-      // X-axis
-      vis.svg.append("g")
+      // Axes groups
+      vis.xAxisG = vis.svg.append("g")
           .attr("class", "x-axis")
-          .attr("transform", "translate(0," + vis.height + ")")
-          .call(d3.axisBottom(x).tickValues(xTicks));
+          .attr("transform", `translate(0,${vis.height})`);
 
-      // Y-axis
-      vis.svg.append("g")
-          .attr("class", "y-axis")
-          .call(d3.axisLeft(y));
+      vis.yAxisG = vis.svg.append("g")
+          .attr("class", "y-axis");
 
       // X-axis label
       vis.svg.append("text")
@@ -102,64 +64,86 @@ class DepthChart {
           .style("text-anchor", "middle")
           .text("Number of Earthquakes");
 
-      // Append brush group BEFORE the line so it doesn’t block mouse events
-      vis.brushG = vis.svg.append('g')
-          .attr('class', 'brush x-brush');
+      vis.updateChart();
+  }
 
-      vis.brush = d3.brushX()
-          .extent([[0, 0], [vis.width, vis.height]])
-          .on('brush', function({selection}) {
-              if (selection) vis.brushed(selection);
-          })
-          .on('end', function({selection}) {
-              if (!selection) vis.brushed(null);
-          });
+  updateChart() {
+      let vis = this;
 
-      vis.brushG
-          .call(vis.brush);
+      const maxDepth = d3.max(vis.data, d => d.depth);
 
-      const line = d3.line()
-          .x(d => x(d.depth))
-          .y(d => y(d.count));
+      // Group data by depth intervals
+      const depthCounts = d3.range(0, maxDepth + 0.1, 5).map(depth => ({
+          depth: depth,
+          count: vis.data.filter(d => d.depth >= depth && d.depth < depth + 5).length
+      }));
 
-      const path = vis.svg.append("path")
+      // Define scales
+      vis.x = d3.scaleLinear()
+          .domain(d3.extent(depthCounts, d => d.depth))
+          .range([0, vis.width]);
+
+      vis.y = d3.scaleLinear()
+          .domain([0, d3.max(depthCounts, d => d.count)])
+          .nice()
+          .range([vis.height, 0]);
+
+      // Define line generator
+      vis.line = d3.line()
+          .x(d => vis.x(d.depth))
+          .y(d => vis.y(d.count));
+
+      // Remove existing line before re-adding
+      vis.svg.selectAll(".line").remove();
+
+      // Draw line
+      vis.svg.append("path")
           .data([depthCounts])
           .attr("class", "line")
-          .attr("d", line)
           .attr("fill", "none")
           .attr("stroke", "green")
-          .attr("stroke-width", 2);
+          .attr("stroke-width", 2)
+          .attr("d", vis.line);
 
-      // Tooltip and circle marker hover effect
-      path.on("mousemove", (event) => {
+      // Tooltip and hover effect
+      vis.svg.on("mousemove", (event) => {
           const mouseX = d3.pointer(event)[0];
+
+          // Find closest data point
           const closest = depthCounts.reduce((prev, curr) =>
-              Math.abs(x(curr.depth) - mouseX) < Math.abs(x(prev.depth) - mouseX) ? curr : prev
+              Math.abs(vis.x(curr.depth) - mouseX) < Math.abs(vis.x(prev.depth) - mouseX) ? curr : prev
           );
 
           vis.hoverCircle
               .style("display", "block")
-              .attr("cx", x(closest.depth))
-              .attr("cy", y(closest.count));
+              .attr("cx", vis.x(closest.depth))
+              .attr("cy", vis.y(closest.count));
 
           vis.tooltip
               .style("display", "block")
-              .html(`Depth: ${closest.depth.toFixed(1)} km<br># of Quakes: ${closest.count}`)
-              .style("top", (event.pageY - 10) + "px")
-              .style("left", (event.pageX + 10) + "px");
+              .html(`Depth: ${closest.depth.toFixed(1)} km<br>Count: ${closest.count}`)
+              .style("top", `${event.pageY - 10}px`)
+              .style("left", `${event.pageX + 10}px`);
       })
       .on("mouseout", () => {
           vis.tooltip.style("display", "none");
           vis.hoverCircle.style("display", "none");
       });
+
+      vis.renderChart();
+  }
+
+  renderChart() {
+      let vis = this;
+      vis.xAxisG.call(d3.axisBottom(vis.x));
+      vis.yAxisG.call(d3.axisLeft(vis.y));
   }
 
   brushed(selection) {
-      let vis = this;
-
       if (selection) {
-          // Get pixel coordinates of brush selection
+          // Handle brushed selection
       } else {
+          // Handle reset
       }
   }
 }

@@ -1,10 +1,7 @@
 class DurationChart {
     constructor({ parentElement }, data) {
         this.parentElement = parentElement;
-        this.data = data.map(d => ({
-            duration: (new Date(d.updated) - new Date(d.time)) / (1000*60) // Duration in seconds
-        }));
-        
+        this.data = data;
         this.margin = { top: 20, right: 20, bottom: 60, left: 60 };
         this.width = 700 - this.margin.left - this.margin.right;
         this.height = 300 - this.margin.top - this.margin.bottom;
