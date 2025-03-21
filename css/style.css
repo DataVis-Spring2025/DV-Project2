@@ -12,6 +12,7 @@
   font-size: 12px;
   font-weight: 600;
   padding: 2px 8px;
+  z-index: 2000;
 }
 .tooltip-label {
   font-weight: 500;
@@ -38,4 +39,167 @@
   right: 10px;
   padding: 5px;
   z-index: 1000;
+  align-items: end;
+}
+
+/* Button styling */
+/* #toggleSidebar {
+  display: block;  /* Ensures it appears on a new line */
+ 
+  /* padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  z-index: 1000;
+} */
+
+/* Make sure it's not affected by floating elements */
+button#toggleSidebar {
+  float: none !important; 
+  display: block; 
+  text-align: right;
+}
+
+/* Sidebar styling */
+#sidebar {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  width: 250px;
+  height: 100vh;
+  background: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  transition: left 0.3s ease-in-out;
+  z-index: 999;
+}
+
+/* Show sidebar */
+#sidebar.open {
+  left: 0;
+}
+
+/* Vertical slider container */
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  height: 300px;
+  width: 50px;
+  margin: auto;
+}
+
+/* Vertical slider */
+input[type="range"] {
+  writing-mode: vertical-lr; /* Makes the slider vertical */
+  appearance: none;
+  height: 300px;
+  width: 10px;
+  background: transparent;
+  position: relative;
+  z-index: 3;
+}
+
+/* Slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #ccc;
+  height: 100%;
+  width: 6px;
+  border-radius: 3px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: #ccc;
+  height: 100%;
+  width: 6px;
+  border-radius: 3px;
+}
+
+/* Slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: -6px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Tick marks container */
+.tickmarks {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* Tick mark line */
+.tickmarks span {
+  width: 8px;
+  height: 2px;
+  background: gray;
+}
+
+/* Bigger tick marks at whole numbers */
+.tickmarks span.big {
+  width: 12px;
+  height: 3px;
+  background: black;
+}
+
+/* Tick labels */
+.tickmarks span.big::after {
+  content: attr(data-value);
+  position: absolute;
+  left: 15px;
+  font-size: 12px;
+  color: black;
+}
+
+/* Styling for the tabs */
+.tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tab-list {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.tab {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+}
+
+.tab.active {
+  background-color: #ddd;
+  font-weight: bold;
+}
+
+.tab-content {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 10px;
 }
