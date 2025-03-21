@@ -98,6 +98,7 @@ $(function () {
       $("#magnitude").val(ui.values[0] + " - " + ui.values[1]);
       magmin = ui.values[0];
       magmax = ui.values[1];
+      filter();
     }
   });
 
@@ -118,6 +119,7 @@ $(function () {
       $("#depth").val(ui.values[0] + " - " + ui.values[1]);
       depmin = ui.values[0];
       depmax = ui.values[1];
+      filter();
     }
   });
 
