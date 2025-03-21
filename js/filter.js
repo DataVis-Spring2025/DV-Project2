@@ -6,16 +6,6 @@ export class Filter {
 	}
 
 	apply(minDate, maxDate, magMax, magMin, depMax, depMin) {
-		console.log("filter begin - " + this.count);
-		/*const filteredData = this.data.filter((d) => {
-            // add slider range filters here
-
-            // timeline filter
-            if(d.parsedTime < minDate) return false;
-            if(d.parsedTime > maxDate) return false;
-            
-            return true;
-        })*/
         const filteredData = Filter.filterDataByDate(this.data, minDate, maxDate).filter(d => {
 			if (d.mag <= magMin || d.mag >= magMax) return false;
 			if (d.depth <= depMin || d.depth >= depMax) return false;
@@ -26,8 +16,6 @@ export class Filter {
 			vis.data = filteredData;
 			vis.updateVis();
 		});
-
-		console.log("filter end - " + this.count++);
 	}
 
 	static filterDataByDate(data, minDate, maxDate) {
