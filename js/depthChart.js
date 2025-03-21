@@ -11,6 +11,7 @@ class DepthChart {
 
   initChart() {
       let vis = this;
+
       vis.svg = d3.select(vis.parentElement)
           .append("svg")
           .attr("width", vis.width + vis.margin.left + vis.margin.right)
