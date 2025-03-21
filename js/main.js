@@ -23,7 +23,14 @@ loadData(`data/AllYears/${year}.csv`)
       // Initialize Sidebar with data
       const sidebar = new Sidebar("sidebar", data);
 
-			const initalFilter = () => filter.apply(timeline.minDate, timeline.maxDate, sidebar.magMax, sidebar.magMin, sidebar.depMax, sidebar.depMin);
+			const initalFilter = () => filter.apply(
+        timeline.minDate, 
+        timeline.maxDate, 
+        sidebar.magMax, 
+        sidebar.magMin, 
+        sidebar.depMax,
+        sidebar.depMin
+      );
       timeline.filter = initalFilter; // Set the filter function to be used on timeline update
       sidebar.filter = initalFilter; // Set the filter function to be used on sidebar update
 		}, 50);
