@@ -2,7 +2,7 @@ const playIcon = `<i class="bi bi-play-fill"></i>`
 const pauseIcon = `<i class="bi bi-pause-fill"></i>`
 
 class Timeline {
-    constructor(data) {
+    constructor(data, initialTimelineWidth) {
         this.data = data;
         this.filter = () => { console.log("timeline filter called before override"); };
         this.isPlaying = false;
@@ -25,7 +25,21 @@ class Timeline {
         this.handleWidth = 10;
         this.playPauseButton = null;
 
+        // Set initial timeline width and calculate min/max dates
+        this.initialTimelineWidth = initialTimelineWidth || 180; // Default to 180px if not provided
+        this.calculateInitialDateRange();
+
         this.initTimeline();
+    }
+
+    calculateInitialDateRange() {
+        const minDate = d3.min(this.data, d => d.parsedTime);
+        const maxDate = d3.max(this.data, d => d.parsedTime);
+        const totalDuration = maxDate - minDate;
+        const initialDuration = (this.initialTimelineWidth / (this.width + this.padding * 2)) * totalDuration;
+
+        this.minDate = minDate;
+        this.maxDate = minDate + initialDuration;
     }
 
     // create all the html elements and setup event listeners
@@ -49,7 +63,7 @@ class Timeline {
         const range = document.createElement('div');
         range.style.position = 'absolute';
         range.style.left = '50px';
-        range.style.width = '180px';
+        range.style.width = this.initialTimelineWidth + 'px'; // Use initialTimelineWidth
         range.style.height = this.height + 'px';
         range.style.backgroundColor = '#ddd';
         range.style.cursor = 'pointer';
@@ -235,10 +249,11 @@ class Timeline {
         const left = range.offsetLeft;
         const right = left + rangeWidth;
         const totalWidth = this.width + this.padding * 2;
-        const minDate = d3.min(this.data, d => new Date(d.time));
-        const maxDate = d3.max(this.data, d => new Date(d.time));
-        this.minDate = new Date(minDate.getTime() + (left - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
-        this.maxDate = new Date(minDate.getTime() + (right - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
+        const minDate = d3.min(this.data, d => d.parsedTime);
+        const maxDate = d3.max(this.data, d => d.parsedTime);
+
+        this.minDate = Math.floor(minDate + ((left - this.padding) / totalWidth) * (maxDate - minDate));
+        this.maxDate = Math.floor(minDate + ((right - this.padding) / totalWidth) * (maxDate - minDate));
         this.filter();
     }
 
@@ -303,10 +318,11 @@ class Timeline {
         const left = range.offsetLeft;
         const right = left + rangeWidth;
         const totalWidth = this.width + this.padding * 2;
-        const minDate = d3.min(this.data, d => new Date(d.time));
-        const maxDate = d3.max(this.data, d => new Date(d.time));
-        this.minDate = new Date(minDate.getTime() + (left - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
-        this.maxDate = new Date(minDate.getTime() + (right - this.padding) / totalWidth * (maxDate.getTime() - minDate.getTime()));
+        const minDate = d3.min(this.data, d => d.parsedTime);
+        const maxDate = d3.max(this.data, d => d.parsedTime);
+
+        this.minDate = Math.floor(minDate + ((left - this.padding) / totalWidth) * (maxDate - minDate));
+        this.maxDate = Math.floor(minDate + ((right - this.padding) / totalWidth) * (maxDate - minDate));
         this.updateDateRange(range);
     }
 
