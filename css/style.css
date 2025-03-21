@@ -42,18 +42,6 @@
   align-items: end;
 }
 
-/* Button styling */
-/* #toggleSidebar {
-  display: block;  /* Ensures it appears on a new line */
- 
-  /* padding: 10px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  z-index: 1000;
-} */
-
 /* Make sure it's not affected by floating elements */
 button#toggleSidebar {
   float: none !important; 

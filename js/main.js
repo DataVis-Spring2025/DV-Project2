@@ -1,14 +1,10 @@
-let magmin = 1, magmax = 7;
-let depmin = -5, depmax = 90;
-
-// Global variable to store the loaded data
-let globalData = [];
-let
-// loadData("2024");
-import { loadData } from './loading.js';
+import { loadData, hideLoading } from './loading.js';
 import { Filter } from './filter.js';
+import { Sidebar } from './sidebar.js';
 
-loadData(`data/AllYears/${year}.csv`)//"data/2004-2025.csv")
+let year = "2004-2025";
+
+loadData(`data/AllYears/${year}.csv`)
 	.then((data) => {
 		// Convert parsedTime to integer timestamps
 		data.forEach(d => d.parsedTime = new Date(d.time).getTime());
@@ -16,14 +12,20 @@ loadData(`data/AllYears/${year}.csv`)//"data/2004-2025.csv")
 		const timeline = new Timeline(data, 50);
 		const filteredData = Filter.filterDataByDate(data, timeline.minDate, timeline.maxDate);
 
-    // seperate heavy operations in setTimeout to avoid blocking the main thread
+		// Separate heavy operations in setTimeout to avoid blocking the main thread
 		setTimeout(() => {
 			const leafletMap = new LeafletMap({ parentElement: "#my-map" }, filteredData);
 			const lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" }, data);
 
 			// Initialize Filter after visualizations are created
 			const filter = new Filter(data, [leafletMap, lineChart]);
-			timeline.filter = () => filter.apply(timeline.minDate, timeline.maxDate);
+
+      // Initialize Sidebar with data
+      const sidebar = new Sidebar("sidebar", data);
+
+			const initalFilter = () => filter.apply(timeline.minDate, timeline.maxDate, sidebar.magMax, sidebar.magMin, sidebar.depMax, sidebar.depMin);
+      timeline.filter = initalFilter; // Set the filter function to be used on timeline update
+      sidebar.filter = initalFilter; // Set the filter function to be used on sidebar update
 		}, 50);
 
 		console.log(data);
@@ -31,6 +33,6 @@ loadData(`data/AllYears/${year}.csv`)//"data/2004-2025.csv")
 	.catch((error) => {
 		console.error(error);
 		requestAnimationFrame(() => {
-			loadingContainer.style.display = "none"; // Hide loading animation on error
+			hideLoading(); // Hide loading animation on error
 		});
-	});=
+	});
