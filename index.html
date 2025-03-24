@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="css/libraries/bootstrap.css">
     <link rel="stylesheet" href="css/libraries/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
- 
 </head>
 <body>
     <div id="my-map"></div>
@@ -21,59 +16,28 @@
         <option value="esri">ESRI Satellite</option>
         <option value="osm">OpenStreetMap</option>
         <option value="stamen">Stamen Terrain</option>
-        
     </select>
+
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <button id="toggleSidebar" class="btn btn-primary me-md-2" style="margin-right: 20px;">Filter Options</button>
+        <button id="toggleSidebar" class="btn btn-primary me-md-2" style="margin-right: 20px;">Filter Options</button>
     </div>
-    <div id="sidebar" style="z-index: 2000;">
-      <h2>Select Years:</h2>
-      <label for="yearSelect">Select Year:</label>
-      <select id="yearSelect">
-        <option value="2004">2004</option>
-        <option value="2005">2005</option>
-        <option value="2006">2006</option>
-        <option value="2007">2007</option>
-        <option value="2008">2008</option>
-        <option value="2009">2009</option>
-        <option value="2010">2010</option>
-        <option value="2011">2011</option>
-        <option value="2012">2012</option>
-        <option value="2013">2013</option>
-        <option value="2014">2014</option>
-        <option value="2015">2015</option>
-        <option value="2016">2016</option>
-        <option value="2017">2017</option>
-        <option value="2018">2018</option>
-        <option value="2019">2019</option>
-        <option value="2020">2020</option>
-        <option value="2021">2021</option>
-        <option value="2022">2022</option>
-        <option value="2023">2023</option>
-        <option value="2024" selected>2024</option>
-        <option value="2025">2025</option>
-        <option value="2004-2025">2004-2025</option>
-      </select>
 
-      <p>
-            <label for="magnitude">Magnitude Range:</label>
-            <input type="text" id="magnitude" readonly="" style="border:0; color:#f6931f; font-weight:bold;">
-          </p>
-        <div id="slider-range" style="height:10px;"></div>
+    <div id="sidebar" style="z-index: 2000;"></div>
 
-        <p>
-            <label for="depth">Depth Range:</label>
-            <input type="text" id="depth" readonly="" style="border:0; color:#f6931f; font-weight:bold;">
-          </p>
-          <br>
-        <div id="slider-range1" style="height:10px;bottom: 20px;"></div>
-      </div>
     <div id="tooltip"></div>
     <div id="timeline"></div>
     <div id="level3">
         <div id="magnitudeChart"></div>
     </div>
-<!-- Collapsible Sidebar -->
+
+    <div id="loading-container" class="loading-container">
+        <div class="spinner"></div>
+        <div class="progress-bar-container">
+            <div id="progress-bar" class="progress-bar">0%</div>
+        </div>
+        <br>
+        <p id="loading-msg"></p>
+    </div>
 
     <!-- library scripts -->
     <script src="js/libraries/d3.v6.min.js"></script>
@@ -84,10 +48,9 @@
     <script src="js/libraries/bootstrap.min.js"></script>
 
     <!-- our scripts -->
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
     <script src="js/leafletMap.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/magnitudeChart.js"></script>
-
 </body>
 </html>

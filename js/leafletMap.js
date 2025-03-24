@@ -142,15 +142,17 @@ class LeafletMap {
 
   updateVis() {
     let vis = this;
-    this.clearMap();
-    // Re-bind the data to the circles
+
+    const bounds = vis.theMap.getBounds();
+    const filteredData = vis.data.filter((d) =>
+      bounds.contains([d.latitude, d.longitude])
+    );
+
     vis.Dots = vis.svg
       .selectAll("circle")
-      .data(vis.data)
+      .data(filteredData)
       .join("circle")
-      .attr("fill", (d) => {
-        return vis.magnitudeColorScale(+d.mag);
-      })
+      .attr("fill", (d) => vis.magnitudeColorScale(+d.mag))
       .attr("stroke", "black")
       .attr(
         "cx",
