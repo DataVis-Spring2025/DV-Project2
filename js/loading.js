@@ -65,6 +65,7 @@ function loadData(url) {
                     d.longitude = +d.longitude;
                     d.mag = +d.mag;
                     d.depth = +d.depth;
+                    d.times=+d.time;
                     d.parsedTime = new Date(d.time); // Cache parsed date for faster sorting
                 });
 
