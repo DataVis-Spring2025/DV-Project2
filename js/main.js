@@ -43,3 +43,22 @@ loadData(`data/AllYears/${year}.csv`)
 			hideLoading(); // Hide loading animation on error
 		});
 	});
+
+// open menu sidebar
+document.getElementById('menu-btn').addEventListener('click', function () {
+	document.getElementById('menusidebar').classList.add('open');
+	document.getElementById('menu-btn').style.display = 'none';  // Hide the menu button
+  });
+  
+  // close menu sidebar
+  document.getElementById('close-btn').addEventListener('click', function () {
+	document.getElementById('menusidebar').classList.remove('open');
+	document.getElementById('menu-btn').style.display = 'block';  // Show the menu button again
+  });
+  
+  document.addEventListener('click', function (event) {
+	if (!document.getElementById('menusidebar').contains(event.target) && !document.getElementById('menu-btn').contains(event.target)) {
+		document.getElementById('menusidebar').classList.remove('open');
+		document.getElementById('menu-btn').style.display = 'block';  // Show the menu button again
+	}
+  });

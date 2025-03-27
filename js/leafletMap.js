@@ -130,7 +130,9 @@ d3.select("#tooltip").html(
         d3.select(this)
           .transition() //D3 selects the object we have moused over in order to perform operations on it
           .duration("150") //how long we are transitioning between the two states (works like keyframes)
-          .attr("fill", "steelblue") //change the fill  TO DO- change fill again
+          .attr("fill", (d) => {
+            return vis.magnitudeColorScale(+d.mag);
+          })
           .attr("r", 3); //change radius
 
         d3.select("#tooltip").style("opacity", 0); //turn off the tooltip
@@ -141,7 +143,8 @@ d3.select("#tooltip").html(
       vis.updateVis();
     });
     
-    document.getElementById('basemap-select').addEventListener('change', function(event) {
+    const basemapSelect = document.getElementById('basemap-select');
+    basemapSelect.addEventListener('change', function (event) {
       let selectedLayer = event.target.value;
       vis.theMap.eachLayer(layer => {
         if (layer instanceof L.TileLayer) vis.theMap.removeLayer(layer);
