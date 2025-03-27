@@ -1,5 +1,5 @@
-const playIcon = `<i class="bi bi-play-fill"></i>`
-const pauseIcon = `<i class="bi bi-pause-fill"></i>`
+const playIcon = `<i class="bi bi-play-fill"></i>`;
+const pauseIcon = `<i class="bi bi-pause-fill"></i>`;
 
 class Timeline {
     constructor(data, initialTimelineWidth) {
@@ -15,20 +15,17 @@ class Timeline {
         this.width = window.innerWidth - this.padding * 2;
         this.height = 50;
         this.tickSpacing = 100;
-        this.tickFormat = "%b %Y"; // %B month, %Y Year
-        this.minDate = new Date('1000-01-01T00:00:00.000Z');
-        this.maxDate = new Date('9999-01-01T00:00:00.000Z');
-        this.selectedYear = null;  // Track selected year
-        this.speed = 30000; // 30 seconds
+        this.tickFormat = "%b %Y";
+        this.selectedYear = null;
+        this.speed = 30000;
         this.playInterval = null;
         this.speedMultiplier = 1;
         this.handleWidth = 10;
         this.playPauseButton = null;
+        this.rangeElement = null;
 
-        // Set initial timeline width and calculate min/max dates
-        this.initialTimelineWidth = initialTimelineWidth || 180; // Default to 180px if not provided
+        this.initialTimelineWidth = initialTimelineWidth || 180;
         this.calculateInitialDateRange();
-
         this.initTimeline();
     }
 
@@ -42,7 +39,6 @@ class Timeline {
         this.maxDate = minDate + initialDuration;
     }
 
-    // create all the html elements and setup event listeners
     initTimeline() {
         const timelineContainer = document.querySelector('#timeline');
         timelineContainer.style.position = 'relative';
@@ -52,45 +48,23 @@ class Timeline {
         timelineContainer.style.margin = '20px 0';
 
         // Play/Pause button
-        const playPauseButton = document.createElement('button');
-        playPauseButton.innerHTML = '▶'; // Play icon
-        playPauseButton.style.position = 'absolute';
-        playPauseButton.style.left = '10px';
-        playPauseButton.style.top = '10px';
-        this.playPauseButton = playPauseButton;
+        this.playPauseButton = this.createButton(playIcon, { left: '10px', top: '10px' }, () => this.togglePlayPause());
 
         // Range div (draggable timeline range)
         const range = document.createElement('div');
         range.style.position = 'absolute';
         range.style.left = '50px';
-        range.style.width = this.initialTimelineWidth + 'px'; // Use initialTimelineWidth
+        range.style.width = this.initialTimelineWidth + 'px';
         range.style.height = this.height + 'px';
         range.style.backgroundColor = '#ddd';
         range.style.cursor = 'pointer';
 
-        // Handle for left side
-        const leftHandle = document.createElement('div');
-        leftHandle.style.position = 'absolute';
-        leftHandle.style.left = '-10px';
-        leftHandle.style.top = '0';
-        leftHandle.style.width = this.handleWidth + 'px';
-        leftHandle.style.height = '100%';
-        leftHandle.style.backgroundColor = '#aaa';
-        leftHandle.style.cursor = 'ew-resize';
-        leftHandle.style.borderRight = '2px solid #555';
+        // Left Handle
+        const leftHandle = this.createHandle('-10px', 'border-right: 2px solid #555;');
+        // Right Handle
+        const rightHandle = this.createHandle('auto', 'border-left: 2px solid #555; right: -10px;');
 
-        // Handle for right side
-        const rightHandle = document.createElement('div');
-        rightHandle.style.position = 'absolute';
-        rightHandle.style.right = '-10px';
-        rightHandle.style.top = '0';
-        rightHandle.style.width = this.handleWidth + 'px';
-        rightHandle.style.height = '100%';
-        rightHandle.style.backgroundColor = '#aaa';
-        rightHandle.style.cursor = 'ew-resize';
-        rightHandle.style.borderLeft = '2px solid #555';
-
-        // Add draggable icon in center
+        // Center Drag Icon
         const dragIcon = document.createElement('div');
         dragIcon.innerHTML = '<i class="bi bi-grip-vertical"></i>';
         dragIcon.style.position = 'absolute';
@@ -102,92 +76,110 @@ class Timeline {
         range.appendChild(leftHandle);
         range.appendChild(dragIcon);
         range.appendChild(rightHandle);
-        timelineContainer.appendChild(playPauseButton);
+        timelineContainer.appendChild(this.playPauseButton);
         timelineContainer.appendChild(range);
 
-        // Speed control button
-        const speedButton = document.createElement('button');
-        speedButton.innerHTML = 'x1';
-        speedButton.style.position = 'absolute';
-        speedButton.style.right = '10px';
-        speedButton.style.top = '10px';
-
+        // Speed Control Button
+        const speedButton = this.createButton('x1', { right: '80px', top: '10px' }, () => this.toggleSpeed(speedButton));
         timelineContainer.appendChild(speedButton);
 
+        // **New Buttons for Resizing Timeline**
+        const increaseButton = this.createButton('+', { right: '50px', top: '10px' }, () => this.adjustRangeSize(20));
+        const decreaseButton = this.createButton('-', { right: '20px', top: '10px' }, () => this.adjustRangeSize(-20));
+        const fullButton = this.createButton('Full', { right: '120px', top: '10px' }, () => this.expandToFullRange());
+
+        timelineContainer.appendChild(increaseButton);
+        timelineContainer.appendChild(decreaseButton);
+        timelineContainer.appendChild(fullButton);
+
         // Event listeners
-        playPauseButton.addEventListener('click', () => this.togglePlayPause());
         leftHandle.addEventListener('mousedown', (e) => this.startDrag(e, 'left', range));
         rightHandle.addEventListener('mousedown', (e) => this.startDrag(e, 'right', range));
         range.addEventListener('mousedown', (e) => this.startDrag(e, 'move', range));
         document.addEventListener('mousemove', (e) => this.onDrag(e, range));
         document.addEventListener('mouseup', () => this.endDrag());
-        speedButton.addEventListener('click', () => this.toggleSpeed(speedButton));
 
-        // Time scale setup with D3
-        const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
-        const timeValues = this.data.map(d => parseTime(d.time));
+        this.rangeElement = range;
 
-        const timeScale = d3.scaleTime()
-            .domain(d3.extent(timeValues))
-            .range([0, this.width]);
+       const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
+const timeValues = this.data.map(d => parseTime(d.time));
 
-        const xAxis = d3.axisBottom(timeScale)
-            .tickFormat(d3.timeFormat(this.tickFormat))
-            .tickValues([timeScale.domain()[0], ...timeScale.ticks(Math.max(1, Math.floor(this.width / this.tickSpacing))), timeScale.domain()[1]]);
+const timeScale = d3.scaleTime()
+    .domain(d3.extent(timeValues))
+    .range([0, this.width]);
 
-        const svg = d3.select(timelineContainer)
-            .append("svg")
-            .attr("width", this.width)
-            .attr("height", this.height)
-            .style("margin-left", this.padding + "px")
-            .style("overflow", "visible")
-            .attr("transform", `translate(0,${this.height})`);
+// Major axis with standard tick format
+const xAxis = d3.axisBottom(timeScale)
+    .tickFormat(d3.timeFormat(this.tickFormat))
+    .tickValues([timeScale.domain()[0], ...timeScale.ticks(Math.max(1, Math.floor(this.width / this.tickSpacing))), timeScale.domain()[1]]);
 
-        const xAxisG = svg.append("g")
-            .call(xAxis);
+// Generate minor tick values for odd-numbered years
+const allYears = d3.timeYear.range(timeScale.domain()[0], timeScale.domain()[1]);
+const minorTickValues = allYears.filter(d => d.getFullYear() % 2 !== 0);
 
-        xAxisG.append("text")
-            .attr("y", 30)
-            .attr("x", this.width / 2)
-            .attr("text-anchor", "middle");
+const xAxisMinor = d3.axisBottom(timeScale)
+    .tickFormat("") // Hide labels for minor ticks
+    .tickSize(5) // Shorter tick length
+    .tickValues(minorTickValues); // Only show for odd-numbered years
+
+const svg = d3.select(timelineContainer)
+    .append("svg")
+    .attr("width", this.width)
+    .attr("height", this.height + 10) // Add extra space for ticks
+    .style("margin-left", this.padding + "px")
+    .style("overflow", "visible")
+    .attr("transform", `translate(0,${this.height})`);
+
+const xAxisG = svg.append("g").call(xAxis);
+
+// Append minor tick axis below the major one
+svg.append("g")
+    .attr("class", "minor-ticks")
+    .call(xAxisMinor);
 
         // Remove last tick mark
         const ticks = xAxisG.selectAll(".tick");
         ticks.filter((_, i) => i === ticks.size() - 2).remove();
     }
 
-    // Method to select the year and filter the timeline data
-    setSelectedYear(year) {
-        this.selectedYear = year;
-        this.filterByYear(year); // Filter the data by the selected year
-    }
-
-    // Filter the data based on the selected year
-    filterByYear(year) {
-        const filteredData = this.data.filter(d => {
-            const date = new Date(d.time);
-            return date.getFullYear() === year;
+    createButton(text, style, callback) {
+        const button = document.createElement('button');
+        button.innerHTML = text;
+        Object.assign(button.style, {
+            position: 'absolute',
+            ...style
         });
-
-        console.log(`Data filtered for year: ${year}`);
-        this.updateTimelineForYear(filteredData);
+        button.addEventListener('click', callback);
+        return button;
     }
 
-    // Update the timeline's min and max date based on the filtered data
-    updateTimelineForYear(filteredData) {
-        const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
-        const timeValues = filteredData.map(d => parseTime(d.time));
-
-        this.minDate = d3.min(timeValues);
-        this.maxDate = d3.max(timeValues);
-        console.log(this.minDate);
-        // After filtering, update the range and rerun any other logic
-        this.updateDateRange();
-        console.log(this.minDate);
-        // Re-render or update any necessary UI components
+    createHandle(left, extraStyles = '') {
+        const handle = document.createElement('div');
+        handle.style.position = 'absolute';
+        handle.style.left = left;
+        handle.style.top = '0';
+        handle.style.width = this.handleWidth + 'px';
+        handle.style.height = '100%';
+        handle.style.backgroundColor = '#aaa';
+        handle.style.cursor = 'ew-resize';
+        handle.style.cssText += extraStyles;
+        return handle;
     }
 
-    // Your other methods for play/pause, speed, etc.
+    adjustRangeSize(delta) {
+        let newWidth = this.rangeElement.offsetWidth + delta;
+        if (newWidth > this.width) newWidth = this.width;
+        if (newWidth < this.handleWidth * 2) newWidth = this.handleWidth * 2;
+
+        this.rangeElement.style.width = newWidth + 'px';
+        this.updateDateRange(this.rangeElement);
+    }
+
+    expandToFullRange() {
+        this.rangeElement.style.width = this.width + 'px';
+        this.rangeElement.style.left = this.padding + 'px';
+        this.updateDateRange(this.rangeElement);
+    }
 
     togglePlayPause() {
         this.isPlaying = !this.isPlaying;
@@ -201,45 +193,32 @@ class Timeline {
     }
 
     toggleSpeed(button) {
-        if (this.speedMultiplier === 1) {
-            this.speedMultiplier = 2;
-            button.innerHTML = 'x2';
-        } else if (this.speedMultiplier === 2) {
-            this.speedMultiplier = 3;
-            button.innerHTML = 'x3';
-        } else {
-            this.speedMultiplier = 1;
-            button.innerHTML = 'x1';
-        }
+        this.speedMultiplier = this.speedMultiplier === 1 ? 2 : this.speedMultiplier === 2 ? 3 : 1;
+        button.innerHTML = `x${this.speedMultiplier}`;
     }
 
-    // move the range to the right by 1 pixel every interval
     startPlaying() {
         if (this.playInterval) return;
 
-        const range = document.querySelector('#timeline div');
+        const range = this.rangeElement;
         if (range.offsetLeft + range.offsetWidth >= this.width + this.padding) {
             range.style.left = this.padding + 'px';
         }
 
         this.playInterval = setInterval(() => {
             let newLeft = range.offsetLeft + this.speedMultiplier;
-            // once it hits the end, stop playing
             if (newLeft + range.offsetWidth > this.width + this.padding) {
                 this.stopPlaying();
                 range.style.left = this.width + this.padding - range.offsetWidth + 'px';
                 this.togglePlayPause();
             } else {
-                // move the range to the right
                 range.style.left = newLeft + 'px';
             }
-            // update min/max and re-run leafletMap filter
             this.updateDateRange(range);
         }, this.speed / (this.width + this.padding));
     }
 
     stopPlaying() {
-        // clean up interval to pause animation
         clearInterval(this.playInterval);
         this.playInterval = null;
     }
@@ -248,12 +227,11 @@ class Timeline {
         const rangeWidth = range.offsetWidth;
         const left = range.offsetLeft;
         const right = left + rangeWidth;
-        const totalWidth = this.width + this.padding * 2;
         const minDate = d3.min(this.data, d => d.parsedTime);
         const maxDate = d3.max(this.data, d => d.parsedTime);
 
-        this.minDate = Math.floor(minDate + ((left - this.padding) / totalWidth) * (maxDate - minDate));
-        this.maxDate = Math.floor(minDate + ((right - this.padding) / totalWidth) * (maxDate - minDate));
+        this.minDate = minDate + ((left - this.padding) / this.width) * (maxDate - minDate);
+        this.maxDate = minDate + ((right - this.padding) / this.width) * (maxDate - minDate);
         this.filter();
     }
 
