@@ -158,6 +158,7 @@ d3.select("#tooltip").html(
     let vis = this;
 
     const bounds = vis.theMap.getBounds();
+    const zoomLevel = vis.theMap.getZoom(); // Get current zoom level
     const filteredData = vis.data.filter((d) =>
       bounds.contains([d.latitude, d.longitude])
     );
@@ -176,7 +177,84 @@ d3.select("#tooltip").html(
         "cy",
         (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).y
       )
-      .attr("r", (d) => 3);
+      .attr("r", (d) => this.sidebar.animationsEnabled ? this.timeline.isPlaying ? 0 : this.calculateScaledRadius(d, zoomLevel) : this.calculateConstantRadius()) // Use constant radius if animations are disabled
+      .style("opacity", (d) => this.sidebar.animationsEnabled ? this.timeline.isPlaying ? 0 : this.calculateStaticOpacity(d) : 1) // Full opacity if animations are disabled
+      .transition()
+      .duration((d) => this.sidebar.animationsEnabled && this.timeline.isPlaying ? this.calculateAnimationDuration(d) : 0) // Animate only if animations are enabled and playing
+      .ease(d3.easeLinear)
+      .attr("r", (d) => this.sidebar.animationsEnabled ? this.calculateScaledRadius(d, zoomLevel) : this.calculateConstantRadius()) // Use constant radius if animations are disabled
+      .style("opacity", (d) => this.sidebar.animationsEnabled ? this.calculateOpacity(d) : 1); // Full opacity if animations are disabled
+  }
+
+  calculateScaledRadius(d, zoomLevel) {
+    const baseRadius = +d.mag; // Base radius proportional to magnitude
+    const scaleFactor = Math.pow(2, zoomLevel - 2); // Scale factor increases with zoom level
+    return baseRadius * scaleFactor; // Adjust radius based on zoom level
+  }
+
+  calculateConstantRadius() {
+    return 3; // Fixed radius of 3 when animations are off, no scaling
+  }
+
+  calculateAnimationDuration(d) {
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity * 2000; // Scale duration (e.g., 2000ms max)
+  }
+
+  calculateRadius(d) {
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity * +d.mag; // Scale radius based on proximity
+  }
+
+  calculateOpacity(d) {
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity; // Scale opacity directly based on proximity (start invisible, become visible)
+  }
+
+  calculateStaticOpacity(d) {
+    // Dynamically calculate opacity when the timeline is paused
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity; // Scale opacity directly based on proximity
+  }
+
+  linkTimeline(timeline) {
+    this.timeline = timeline;
+  }
+
+  linkSidebar(sidebar) {
+    this.sidebar = sidebar; // Link the sidebar to access the animation toggle state
   }
 
   renderVis() {

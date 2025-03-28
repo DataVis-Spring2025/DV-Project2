@@ -9,12 +9,18 @@ loadData(`data/AllYears/${year}.csv`)
 		// Convert parsedTime to integer timestamps
 		data.forEach(d => d.parsedTime = new Date(d.time).getTime());
 
-		const timeline = new Timeline(data, 50);
+		const initialTimelineWidth = 50;
+		const timeline = new Timeline(data, initialTimelineWidth);
+
 		const filteredData = Filter.filterDataByDate(data, timeline.minDate, timeline.maxDate);
 
 		// Separate heavy operations in setTimeout to avoid blocking the main thread
 		setTimeout(() => {
 			const leafletMap = new LeafletMap({ parentElement: "#my-map" }, filteredData);
+
+			// Link the timeline and sidebar to the map
+			leafletMap.linkTimeline(timeline);
+
 			const lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" }, data);
 			const depthChart = new DepthChart({ parentElement: "#depthChart" }, data);
 			const durationChart = new DChart({ parentElement: "#durationChart" }, data);
@@ -27,15 +33,15 @@ loadData(`data/AllYears/${year}.csv`)
       const sidebar = new Sidebar("sidebar", data);
 			timeline.linkSidebar(sidebar);
 			const initalFilter = () => filter.apply(
-        timeline.minDate, 
-        timeline.maxDate, 
-        sidebar.magMax, 
-        sidebar.magMin, 
-        sidebar.depMax,
-        sidebar.depMin
-      );
-      timeline.filter = initalFilter; // Set the filter function to be used on timeline update
-      sidebar.filter = initalFilter; // Set the filter function to be used on sidebar update
+				timeline.minDate, 
+				timeline.maxDate, 
+				sidebar.magMax, 
+				sidebar.magMin, 
+				sidebar.depMax,
+				sidebar.depMin
+			);
+			timeline.filter = initalFilter; // Set the filter function to be used on timeline update
+			sidebar.filter = initalFilter; // Set the filter function to be used on sidebar update
 		}, 50);
 
 		console.log(data);
