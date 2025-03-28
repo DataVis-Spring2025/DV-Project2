@@ -34,7 +34,7 @@ class MagnitudeChart {
 
   initChart() {
     this.initDropdown();
-    
+
     let vis = this;
 
     vis.svg = d3.select(vis.parentElement)
@@ -85,87 +85,80 @@ class MagnitudeChart {
       .domain([0, d3.max(magCounts, d => d.count)])
       .nice()
       .range([vis.height, 0]);
-  
-    vis.svg.selectAll("*:not(circle)").remove();
-  
-    // X-axis
-    vis.svg.append("g")
-      .attr("class", "x-axis")
-      .attr("transform", "translate(0," + vis.height + ")")
-      .call(d3.axisBottom(x).ticks(10));
-  
-    // Y-axis
-    vis.svg.append("g")
-      .attr("class", "y-axis")
-      .call(d3.axisLeft(y));
-  
-    // X-axis label
-    vis.svg.append("text")
-      .attr("class", "x-axis-label")
-      .attr("x", vis.width / 2)
-      .attr("y", vis.height + vis.margin.bottom - 10)
-      .style("text-anchor", "middle")
-      .text("Magnitude");
-  
-    // Y-axis label
-    vis.svg.append("text")
-      .attr("class", "y-axis-label")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -vis.height / 2)
-      .attr("y", -vis.margin.left + 20)
-      .style("text-anchor", "middle")
-      .text("Number of Earthquakes");
-  
-    // Append brush group BEFORE the line so it doesn’t block mouse events
-    vis.brushG = vis.svg.append('g')
-      .attr('class', 'brush x-brush');
-  
-    vis.brush = d3.brushX()
-      .extent([[0, 0], [vis.width, vis.height]])
-      .on('brush', function({selection}) {
-          if (selection) vis.brushed(selection);
-      })
-      .on('end', function({selection}) {
-          if (!selection) vis.brushed(null);
-      });
-  
-    vis.brushG
-      .call(vis.brush);
-  
-    const line = d3.line()
-      .x(d => x(d.mag))
-      .y(d => y(d.count));
-  
-    const path = vis.svg.append("path")
-      .data([magCounts])
-      .attr("class", "line")
-      .attr("d", line)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 2);
-  
-    // Tooltip and circle marker hover effect
+  // Clear previous chart elements except brush
+  vis.svg.selectAll("*:not(circle)").remove();
+
+  // X-axis
+  vis.svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", "translate(0," + vis.height + ")")
+    .call(d3.axisBottom(x).ticks(10));
+
+  // Y-axis
+  vis.svg.append("g")
+    .attr("class", "y-axis")
+    .call(d3.axisLeft(y));
+
+
+  // X-axis label
+  vis.svg.append("text")
+    .attr("class", "x-axis-label")
+    .attr("x", vis.width / 2)
+    .attr("y", vis.height + vis.margin.bottom - 10)
+    .style("text-anchor", "middle")
+    .text("Magnitude");
+
+// Y-axis label
+  vis.svg.append("text")
+    .attr("class", "y-axis-label")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -vis.height / 2)
+    .attr("y", -vis.margin.left + 20)
+    .style("text-anchor", "middle")
+    .text("Number of Earthquakes");
+
+  // Append the line path with clip-path to prevent it from going beyond the visible area
+  const line = d3.line()
+    .x(d => x(d.mag))
+    .y(d => y(d.count));
+
+  const path = vis.svg.append("path")
+    .data([magCounts])
+    .attr("class", "line")
+    .attr("d", line)
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("stroke-width", 2)
+    .attr("clip-path", "url(#clip)");  // Clip path applied here
+
+  // Clip path definition
+  vis.svg.append("defs")
+    .append("clipPath")
+    .attr("id", "clip")
+    .append("rect")
+    .attr("width", vis.width)
+    .attr("height", vis.height);
     path.on("mousemove", (event) => {
-        const mouseX = d3.pointer(event)[0];
-        const closest = magCounts.reduce((prev, curr) =>
-          Math.abs(x(curr.mag) - mouseX) < Math.abs(x(prev.mag) - mouseX) ? curr : prev
-        );
-  
-        vis.hoverCircle
-          .style("display", "block")
-          .attr("cx", x(closest.mag))
-          .attr("cy", y(closest.count));
-  
-        vis.tooltip
-          .style("display", "block")
-          .html(`Magnitude: ${closest.mag.toFixed(1)}<br>Count: ${closest.count}`)
-          .style("top", (event.pageY - 10) + "px")
-          .style("left", (event.pageX + 10) + "px");
-      })
-      .on("mouseout", () => {
-        vis.tooltip.style("display", "none");
-        vis.hoverCircle.style("display", "none");
-      });
+      const mouseX = d3.pointer(event)[0];
+      const closest = magCounts.reduce((prev, curr) =>
+        Math.abs(x(curr.mag) - mouseX) < Math.abs(x(prev.mag) - mouseX) ? curr : prev
+      );
+
+      vis.hoverCircle
+        .style("display", "block")
+        .attr("cx", x(closest.mag))
+        .attr("cy", y(closest.count));
+
+      vis.tooltip
+        .style("display", "block")
+        .html(`Magnitude: ${closest.mag.toFixed(1)}<br>Count: ${closest.count}`)
+        .style("top", (event.pageY - 10) + "px")
+        .style("left", (event.pageX + 10) + "px");
+    })
+    .on("mouseout", () => {
+      vis.tooltip.style("display", "none");
+      vis.hoverCircle.style("display", "none");
+    });
   }
   
   brushed(selection) {
