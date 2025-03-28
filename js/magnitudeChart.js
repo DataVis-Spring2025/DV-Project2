@@ -206,6 +206,24 @@ updateChart(magmin, magmax) {
     .attr("class", "y-axis")
     .call(d3.axisLeft(y));
 
+
+  // X-axis label
+  vis.svg.append("text")
+    .attr("class", "x-axis-label")
+    .attr("x", vis.width / 2)
+    .attr("y", vis.height + vis.margin.bottom - 10)
+    .style("text-anchor", "middle")
+    .text("Magnitude");
+
+// Y-axis label
+  vis.svg.append("text")
+    .attr("class", "y-axis-label")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -vis.height / 2)
+    .attr("y", -vis.margin.left + 20)
+    .style("text-anchor", "middle")
+    .text("Number of Earthquakes");
+
   // Append the line path with clip-path to prevent it from going beyond the visible area
   const line = d3.line()
     .x(d => x(d.mag))
