@@ -16,6 +16,8 @@ export class Filter {
 			vis.data = filteredData;
 			vis.updateVis();
 		});
+
+		return filteredData;
 	}
 
 	static filterDataByDate(data, minDate, maxDate) {
