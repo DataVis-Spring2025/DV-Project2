@@ -130,7 +130,9 @@ d3.select("#tooltip").html(
         d3.select(this)
           .transition() //D3 selects the object we have moused over in order to perform operations on it
           .duration("150") //how long we are transitioning between the two states (works like keyframes)
-          .attr("fill", "steelblue") //change the fill  TO DO- change fill again
+          .attr("fill", (d) => {
+            return vis.magnitudeColorScale(+d.mag);
+          }) //change the fill  TO DO- change fill again
           .attr("r", 3); //change radius
 
         d3.select("#tooltip").style("opacity", 0); //turn off the tooltip

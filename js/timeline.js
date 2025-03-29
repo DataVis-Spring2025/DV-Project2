@@ -23,6 +23,9 @@ class Timeline {
         this.handleWidth = 10;
         this.playPauseButton = null;
         this.rangeElement = null;
+        this.isMuted = false; // Mute state
+        this.audio = new Audio('052256_cracking-earthquake-cracking-soil-cracking-stone-86770.mp3'); // Replace with your MP3 file path
+        this.audio.loop = true; // Loop audio while playing
 
         this.initialTimelineWidth = initialTimelineWidth || 180;
         this.calculateInitialDateRange();
@@ -47,8 +50,14 @@ class Timeline {
         timelineContainer.style.border = '1px solid #ccc';
         timelineContainer.style.margin = '20px 0';
 
+        const timelineButtons = document.createElement('div');
+        timelineButtons.style.position = 'absolute';
+        timelineButtons.style.top = '0px';
+        timelineButtons.style.left = '10px';
+        timelineButtons.style.zIndex = "1000";
+
         // Play/Pause button
-        this.playPauseButton = this.createButton(playIcon, { left: '10px', top: '10px' }, () => this.togglePlayPause());
+        this.playPauseButton = this.createButton(playIcon, { top: '10px' }, () => this.togglePlayPause());
 
         // Range div (draggable timeline range)
         const range = document.createElement('div');
@@ -76,21 +85,22 @@ class Timeline {
         range.appendChild(leftHandle);
         range.appendChild(dragIcon);
         range.appendChild(rightHandle);
-        timelineContainer.appendChild(this.playPauseButton);
+        
+        timelineButtons.appendChild(this.playPauseButton);
         timelineContainer.appendChild(range);
 
         // Speed Control Button
-        const speedButton = this.createButton('x1', { right: '80px', top: '10px' }, () => this.toggleSpeed(speedButton));
-        timelineContainer.appendChild(speedButton);
+        const speedButton = this.createButton('x1', { left: '40px', top: '10px' }, () => this.toggleSpeed(speedButton));
+        timelineButtons.appendChild(speedButton);
 
         // **New Buttons for Resizing Timeline**
-        const increaseButton = this.createButton('+', { right: '50px', top: '10px' }, () => this.adjustRangeSize(20));
-        const decreaseButton = this.createButton('-', { right: '20px', top: '10px' }, () => this.adjustRangeSize(-20));
-        const fullButton = this.createButton('Full', { right: '120px', top: '10px' }, () => this.expandToFullRange());
+        const increaseButton = this.createButton('+', { left: '80px', top: '10px' }, () => this.adjustRangeSize(10));
+        const decreaseButton = this.createButton('-', { left: '110px', top: '10px' }, () => this.adjustRangeSize(-10));
+        const fullButton = this.createButton('Full', { left: '140px', top: '10px' }, () => this.expandToFullRange());
 
-        timelineContainer.appendChild(increaseButton);
-        timelineContainer.appendChild(decreaseButton);
-        timelineContainer.appendChild(fullButton);
+        timelineButtons.appendChild(increaseButton);
+        timelineButtons.appendChild(decreaseButton);
+        timelineButtons.appendChild(fullButton);
 
         // Event listeners
         leftHandle.addEventListener('mousedown', (e) => this.startDrag(e, 'left', range));
@@ -140,6 +150,7 @@ svg.append("g")
         // Remove last tick mark
         const ticks = xAxisG.selectAll(".tick");
         ticks.filter((_, i) => i === ticks.size() - 2).remove();
+        timelineContainer.appendChild(timelineButtons);
     }
 
     createButton(text, style, callback) {
@@ -169,7 +180,7 @@ svg.append("g")
     adjustRangeSize(delta) {
         let newWidth = this.rangeElement.offsetWidth + delta;
         if (newWidth > this.width) newWidth = this.width;
-        if (newWidth < this.handleWidth * 2) newWidth = this.handleWidth * 2;
+        if (newWidth < 10) newWidth = 10;
 
         this.rangeElement.style.width = newWidth + 'px';
         this.updateDateRange(this.rangeElement);
@@ -196,6 +207,7 @@ svg.append("g")
         this.speedMultiplier = this.speedMultiplier === 1 ? 2 : this.speedMultiplier === 2 ? 3 : 1;
         button.innerHTML = `x${this.speedMultiplier}`;
     }
+    
 
     startPlaying() {
         if (this.playInterval) return;
@@ -215,12 +227,35 @@ svg.append("g")
                 range.style.left = newLeft + 'px';
             }
             this.updateDateRange(range);
+    
+            // Check if audio is enabled; stop audio if it's disabled
+            if (!this.sidebar.audioEnabled) {
+                this.muteAudio();
+            } else if (this.sidebar.audioEnabled) {
+                this.unmuteAudio();
+            }
         }, this.speed / (this.width + this.padding));
+    
+        console.log("Playing audio...");
+        if (this.sidebar.audioEnabled) {
+            this.audio.play();
+        }
     }
 
     stopPlaying() {
         clearInterval(this.playInterval);
         this.playInterval = null;
+
+        this.audio.pause();
+        this.audio.currentTime = 0;
+    }
+
+    muteAudio() {
+        this.audio.muted = true;
+    }
+    
+    unmuteAudio() {
+        this.audio.muted = false;
     }
 
     updateDateRange(range) {
@@ -304,10 +339,16 @@ svg.append("g")
         this.updateDateRange(range);
     }
 
+   
+
     endDrag() {
         if (this.isDragging) {
             this.isDragging = false;
             this.filter();
         }
     }
+
+    linkSidebar(sidebar) {
+        this.sidebar = sidebar; // Link the sidebar to access the animation toggle state
+      }
 }

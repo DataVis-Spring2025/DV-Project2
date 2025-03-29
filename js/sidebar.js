@@ -44,6 +44,7 @@ class Sidebar {
 
         this.filter = () => { console.log("Sidebar filter called before override"); };
 
+        this.audioEnabled = true;
         this.init();
     }
 
@@ -79,13 +80,15 @@ class Sidebar {
         });
 
         // Initialize dropdown
-        this.initYearDropdown();
+        // this.initYearDropdown();
 
         // Initialize sidebar toggle
         this.initSidebarToggle();
 
         // Initialize year selection
-        this.initYearSelection();
+        // this.initYearSelection();
+
+        this.initAudioToggle();
     }
 
     addElement(element) {
@@ -142,6 +145,28 @@ class Sidebar {
                 this.filter(); // Call the filter method when the year changes
             });
         });
+    }
+
+    initAudioToggle() {
+        const audioToggleContainer = document.createElement("div");
+        audioToggleContainer.style.marginTop = "10px";
+
+        const audioToggleLabel = document.createElement("label");
+        audioToggleLabel.textContent = "Enable Audio:";
+        audioToggleLabel.style.marginRight = "10px";
+
+        const audioToggleCheckbox = document.createElement("input");
+        audioToggleCheckbox.type = "checkbox";
+        audioToggleCheckbox.checked = this.audioEnabled;
+
+        audioToggleCheckbox.addEventListener("change", (event) => {
+            this.audioEnabled = event.target.checked;
+            this.filter(); // Trigger the filter to update the map
+        });
+
+        audioToggleContainer.appendChild(audioToggleLabel);
+        audioToggleContainer.appendChild(audioToggleCheckbox);
+        this.container.appendChild(audioToggleContainer);
     }
 }
 

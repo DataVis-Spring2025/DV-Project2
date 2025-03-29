@@ -22,7 +22,7 @@ loadData(`data/AllYears/${year}.csv`)
 
       // Initialize Sidebar with data
       const sidebar = new Sidebar("sidebar", data);
-
+			timeline.linkSidebar(sidebar);
 			const initalFilter = () => filter.apply(
         timeline.minDate, 
         timeline.maxDate, 

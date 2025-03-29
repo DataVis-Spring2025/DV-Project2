@@ -251,7 +251,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 #progress-bar {
-  width: 0;
+  width: 0%;
   height: 20px;
   background: #4caf50;
   color: white;
@@ -278,3 +278,4 @@ input[type="range"]::-moz-range-thumb {
     transform: rotate(360deg);
   }
 }
+

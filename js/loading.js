@@ -20,6 +20,7 @@ function updateLoadingMessage(message) {
 
 function updateProgressBar(progress) {
     requestAnimationFrame(() => {
+        progress = Math.min(100, Math.max(0, progress));
         progressBar.style.width = `${progress}%`;
         progressBar.textContent = `${progress}%`;
     });
@@ -38,6 +39,7 @@ function loadCSVWithProgress(url) {
         };
         xhr.onload = () => {
         if (xhr.status === 200) {
+            updateProgressBar(100);
             const data = d3.csvParse(xhr.responseText);
             resolve(data);
         } else {
