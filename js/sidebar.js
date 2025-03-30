@@ -45,6 +45,7 @@ class Sidebar {
         this.filter = () => { console.log("Sidebar filter called before override"); };
 
         this.audioEnabled = true;
+        this.shakeEnabled = true;
         this.init();
     }
 
@@ -89,6 +90,7 @@ class Sidebar {
         // this.initYearSelection();
 
         this.initAudioToggle();
+        this.initShakeToggle();
     }
 
     addElement(element) {
@@ -167,6 +169,28 @@ class Sidebar {
         audioToggleContainer.appendChild(audioToggleLabel);
         audioToggleContainer.appendChild(audioToggleCheckbox);
         this.container.appendChild(audioToggleContainer);
+    }
+
+    initShakeToggle() {
+        const shakeToggleContainer = document.createElement("div");
+        shakeToggleContainer.style.marginTop = "10px";
+
+        const shakeToggleLabel = document.createElement("label");
+        shakeToggleLabel.textContent = "Enable Shaking Animation:";
+        shakeToggleLabel.style.marginLeft = "0px";
+
+        const shakeToggleCheckbox = document.createElement("input");
+        shakeToggleCheckbox.type = "checkbox";
+        shakeToggleCheckbox.checked = this.audioEnabled;
+
+        shakeToggleCheckbox.addEventListener("change", (event) => {
+            this.shakeEnabled = event.target.checked;
+            this.filter(); // Trigger the filter to update the map
+        });
+
+        shakeToggleContainer.appendChild(shakeToggleLabel);
+        shakeToggleContainer.appendChild(shakeToggleCheckbox);
+        this.container.appendChild(shakeToggleContainer);
     }
 }
 

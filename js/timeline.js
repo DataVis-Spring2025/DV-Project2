@@ -23,9 +23,9 @@ class Timeline {
         this.handleWidth = 10;
         this.playPauseButton = null;
         this.rangeElement = null;
-        this.isMuted = false; // Mute state
+        this.isMuted = false; 
         this.audio = new Audio('052256_cracking-earthquake-cracking-soil-cracking-stone-86770.mp3'); // Replace with your MP3 file path
-        this.audio.loop = true; // Loop audio while playing
+        this.audio.loop = true; 
 
         this.initialTimelineWidth = initialTimelineWidth || 180;
         this.calculateInitialDateRange();
@@ -234,6 +234,16 @@ svg.append("g")
             } else if (this.sidebar.audioEnabled) {
                 this.unmuteAudio();
             }
+
+            if (!this.sidebar.shakeEnabled) {
+                document.getElementById('my-map').classList.remove('shake');
+                document.getElementById('level3').classList.remove('shake');
+                document.getElementById('toggleSidebar').classList.remove('shake');
+            } else if (this.sidebar.shakeEnabled) {
+                document.getElementById('my-map').classList.add('shake');
+                document.getElementById('level3').classList.add('shake');
+                document.getElementById('toggleSidebar').classList.add('shake');
+            }
         }, this.speed / (this.width + this.padding));
     
         console.log("Playing audio...");
@@ -248,6 +258,9 @@ svg.append("g")
 
         this.audio.pause();
         this.audio.currentTime = 0;
+        document.getElementById('my-map').classList.remove('shake');
+        document.getElementById('level3').classList.remove('shake'); 
+        document.getElementById('toggleSidebar').classList.remove('shake');
     }
 
     muteAudio() {
