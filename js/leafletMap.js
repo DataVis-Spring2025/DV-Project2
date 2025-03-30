@@ -101,12 +101,24 @@ class LeafletMap {
           .style("z-index", 1000000)
           // Format number with million and thousand separator
           //***** TO DO- change this tooltip to show useful information about the quakes
-          .html(
-            `<div class="tooltip-label">City: ${d.city}, Population ${d3.format(
-              ","
-            )(d.population)}</div>`
-          );
-      })
+          // Define time format
+const formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+
+// Update tooltip
+d3.select("#tooltip").html(
+  `<div class="tooltip-label">
+    <img src="images/location-icon.png" alt="Location" width="20" height="20"> <span class="bold-label">Place:</span> ${d.place}<br>
+    <img src="images/clock-icon.png" alt="Time" width="20" height="20"> <span class="bold-label">Time:</span> ${formatTime(new Date(d.time))}<br>
+    <img src="images/magnitude-icon.png" alt="Magnitude" width="20" height="20"> <span class="bold-label">Magnitude:</span> ${d.mag}<br>
+    <img src="images/depth-icon.png" alt="Depth" width="20" height="20"> <span class="bold-label">Depth:</span> ${d.depth}'km <br>
+    <img src="images/latitude-icon.png" alt="Latitude" width="20" height="20"> <span class="bold-label">Latitude:</span> ${d.latitude}<br>
+    <img src="images/longitude-icon.png" alt="Longitude" width="20" height="20"> <span class="bold-label">Longitude:</span> ${d.longitude}
+  </div>`
+);
+
+
+
+})
       .on("mousemove", (event) => {
         //position the tooltip
         d3.select("#tooltip")
@@ -142,15 +154,17 @@ class LeafletMap {
 
   updateVis() {
     let vis = this;
-    this.clearMap();
-    // Re-bind the data to the circles
+
+    const bounds = vis.theMap.getBounds();
+    const filteredData = vis.data.filter((d) =>
+      bounds.contains([d.latitude, d.longitude])
+    );
+
     vis.Dots = vis.svg
       .selectAll("circle")
-      .data(vis.data)
+      .data(filteredData)
       .join("circle")
-      .attr("fill", (d) => {
-        return vis.magnitudeColorScale(+d.mag);
-      })
+      .attr("fill", (d) => vis.magnitudeColorScale(+d.mag))
       .attr("stroke", "black")
       .attr(
         "cx",
