@@ -108,7 +108,7 @@ class LeafletMap {
       .on("mousemove", (event) => {
         d3.select("#tooltip")
           .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY + 10 + "px");
+          .style("top", event.pageY + 10 + "px"); // Ensure tooltip follows cursor
       })
       .on("mouseleave", function () {
         //function to add mouseover event
@@ -172,7 +172,9 @@ class LeafletMap {
       .on("mouseover", function (event, d) {
         d3.select("#tooltip")
           .style("display", "block")
-          .style("z-index", 1000000);
+          .style("z-index", 1000000)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px")
 
         const formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S");
 
@@ -186,6 +188,14 @@ class LeafletMap {
             <img src="images/longitude-icon.png" alt="Longitude" width="20" height="20"> <span class="bold-label">Longitude:</span> ${d.longitude}
           </div>`
         );
+      })
+      .on("mousemove", (event) => {
+        d3.select("#tooltip")
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px"); // Ensure tooltip follows cursor
+      })
+      .on("mouseleave", function () {
+        d3.select("#tooltip").style("display", "none"); // Change to display none
       })
       .transition()
       .duration((d) => this.sidebar.animationsEnabled && this.timeline.isPlaying ? this.calculateAnimationDuration(d) : 0) // Animate only if animations are enabled and playing
