@@ -51,7 +51,7 @@ Use nginx or a vscode extension like live server to run it locally.
 - Thing 1
 - Thing 2
 ### Rashi Loni
-- Motivation
+- thing 1
 - Video
 ### Samraysh Pellakur
 - Thing 1
