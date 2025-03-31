@@ -38,7 +38,14 @@ class DChart {
       .attr("stroke-width", 2)
       .style("display", "none");
 
-
+    vis.svg.append("text")
+      .attr("class", "chart-title") // Add a class to prevent removal
+      .attr("x", vis.width / 2)
+      .attr("y", -10) // Adjust positioning as needed
+      .attr("text-anchor", "middle")
+      .attr("font-size", "16px")
+      .attr("font-weight", "bold")
+      .text("Earthquake Duration Distribution");
 
      
 
@@ -64,7 +71,7 @@ class DChart {
       .nice()
       .range([vis.height, 0]);
   
-    vis.svg.selectAll("*:not(circle)").remove();
+    vis.svg.selectAll("*:not(circle):not(.chart-title)").remove();
   
     // X-axis
     vis.svg.append("g")
@@ -95,6 +102,7 @@ class DChart {
       .text("Number of Earthquakes");
   
     // Append brush group BEFORE the line so it doesn’t block mouse events
+    /*
     vis.brushG = vis.svg.append('g')
       .attr('class', 'brush x-brush');
   
@@ -109,6 +117,7 @@ class DChart {
   
     vis.brushG
       .call(vis.brush);
+      */
   
     const line = d3.line()
       .x(d => x(d.duration2))
@@ -136,7 +145,7 @@ class DChart {
   
         vis.tooltip
           .style("display", "block")
-          .html(`Duration2: ${closest.duration2.toFixed(1)}<br>Count: ${closest.count}`)
+          .html(`Duration: ${closest.duration2.toFixed(1)} seconds<br># of Quakes: ${closest.count}`)
           .style("top", (event.pageY - 10) + "px")
           .style("left", (event.pageX + 10) + "px");
       })
@@ -145,7 +154,7 @@ class DChart {
         vis.hoverCircle.style("display", "none");
       });
   }
-  
+  /*
   brushed(selection) {
     let vis = this;
     
@@ -155,6 +164,6 @@ class DChart {
     } else {
     }
   }
-
+*/
   
 }

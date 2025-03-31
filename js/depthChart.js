@@ -64,6 +64,16 @@ class DepthChart {
           .style("text-anchor", "middle")
           .text("Number of Earthquakes");
 
+
+      vis.svg.append("text")
+          .attr("class", "chart-title") // Add a class to prevent removal
+          .attr("x", vis.width / 2)
+          .attr("y", -10) // Adjust positioning as needed
+          .attr("text-anchor", "middle")
+          .attr("font-size", "16px")
+          .attr("font-weight", "bold")
+          .text("Earthquake Depth Distribution");
+
       vis.updateVis();
   }
 
@@ -121,7 +131,7 @@ class DepthChart {
 
           vis.tooltip
               .style("display", "block")
-              .html(`Depth: ${closest.depth.toFixed(1)} km<br>Count: ${closest.count}`)
+              .html(`Depth: ${closest.depth.toFixed(1)} km<br># of Quakes: ${closest.count}`)
               .style("top", `${event.pageY - 10}px`)
               .style("left", `${event.pageX + 10}px`);
       })
@@ -138,6 +148,7 @@ class DepthChart {
       vis.xAxisG.call(d3.axisBottom(vis.x));
       vis.yAxisG.call(d3.axisLeft(vis.y));
   }
+  /*
 
   brushed(selection) {
       if (selection) {
@@ -146,4 +157,5 @@ class DepthChart {
           // Handle reset
       }
   }
+      */
 }
