@@ -13,9 +13,19 @@
 [TODO: Include your design sketches and explain the reasoning behind your design choices.]
 
 ## Discoveries
+Found that in 2009 Europe went from several small magnitude earthquakes, to a lul, to suddenly a handful of very high magnitude earthquakes.
+
 [TODO: Present some findings you arrive at with your application.]
 
 ## Process
+### Development
+- Create Miro Card
+- Assign Miro Card to team member
+- Create branch
+- Work on card to present work at next meeting
+- Present work at meeting, if it passes, PR to main
+- Repeat
+
 ### Libraries
 - Bootstrap (make things pretty)
 - d3 (automate visualization creation)
