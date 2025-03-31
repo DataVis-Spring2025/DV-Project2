@@ -24,12 +24,16 @@ class Timeline {
         this.speedMultiplier = 1;
         this.handleWidth = 10;
         this.playPauseButton = null;
+        this.infoDisplay = null; // Reference to the info display div
+        this.lastFrameTime = null; // Track the last frame time for days per second calculation
+        this.lastLeftPosition = null; // Track the last left position of the range
 
         // Set initial timeline width and calculate min/max dates
         this.initialTimelineWidth = initialTimelineWidth || 180; // Default to 180px if not provided
         this.calculateInitialDateRange();
 
         this.initTimeline();
+        this.updateInfoDisplay(document.querySelector('#timeline div')); // Ensure info display is updated on init
     }
 
     calculateInitialDateRange() {
@@ -50,6 +54,20 @@ class Timeline {
         timelineContainer.style.height = this.height + 'px';
         timelineContainer.style.border = '1px solid #ccc';
         timelineContainer.style.margin = '20px 0';
+
+        // Info display div
+        const infoDisplay = document.createElement('div');
+        infoDisplay.style.display = 'flex';
+        infoDisplay.style.alignItems = 'center';
+        infoDisplay.style.justifyContent = 'flex-start'; // Left-align all elements
+        infoDisplay.style.marginBottom = '-20px';
+        infoDisplay.innerHTML = `
+            <span id="date-range" style="width: 25vw; padding: 0 10px; text-align: left;">Selected Range: N/A</span>
+            <span id="count-displayed" style="width: 25vw; padding: 0 10px; text-align: left;">Events Displayed: N/A</span>
+            <span id="days-per-second" style="width: 25vw; padding: 0 10px; text-align: left;">Speed: N/A days/second</span>
+        `;
+        timelineContainer.parentElement.insertBefore(infoDisplay, timelineContainer);
+        this.infoDisplay = infoDisplay;
 
         // Play/Pause button
         const playPauseButton = document.createElement('button');
@@ -197,7 +215,7 @@ class Timeline {
         } else {
             this.stopPlaying();
         }
-        this.filter();
+        this.filter(); // Trigger filter to update map visuals
     }
 
     toggleSpeed(button) {
@@ -255,6 +273,43 @@ class Timeline {
         this.minDate = Math.floor(minDate + ((left - this.padding) / totalWidth) * (maxDate - minDate));
         this.maxDate = Math.floor(minDate + ((right - this.padding) / totalWidth) * (maxDate - minDate));
         this.filter();
+        this.updateInfoDisplay(range);
+    }
+
+    updateInfoDisplay(range) {
+        const dateRangeElement = this.infoDisplay.querySelector('#date-range');
+        const countDisplayedElement = this.infoDisplay.querySelector('#count-displayed');
+        const daysPerSecondElement = this.infoDisplay.querySelector('#days-per-second');
+
+        // Update Selected Range
+        const minDateFormatted = new Date(this.minDate).toLocaleDateString();
+        const maxDateFormatted = new Date(this.maxDate).toLocaleDateString();
+        dateRangeElement.textContent = `Selected Range: ${minDateFormatted} - ${maxDateFormatted}`;
+
+        // Update Events Displayed
+        const filteredData = this.data.filter(d => {
+            const date = new Date(d.time);
+            return date >= this.minDate && date <= this.maxDate;
+        });
+        countDisplayedElement.textContent = `Events Displayed: ${filteredData.length}`;
+
+        // Calculate and update speed
+        const currentTime = performance.now();
+        if (this.isPlaying && this.lastFrameTime !== null && this.lastLeftPosition !== null) {
+            const elapsedTime = (currentTime - this.lastFrameTime) / 1000; // Convert to seconds
+            const rangeLeft = range.offsetLeft;
+            const totalWidth = this.width + this.padding * 2;
+            const totalDays = (d3.max(this.data, d => d.parsedTime) - d3.min(this.data, d => d.parsedTime)) / (1000 * 60 * 60 * 24); // Total days in dataset
+            const daysPerPixel = totalDays / totalWidth;
+            const pixelsMoved = Math.abs(rangeLeft - this.lastLeftPosition);
+            const daysPerSecond = (pixelsMoved * daysPerPixel) / elapsedTime;
+            daysPerSecondElement.textContent = `Speed: ${daysPerSecond.toFixed(2)} days/second`;
+        } else {
+            daysPerSecondElement.textContent = `Speed: 0.00 days/second`;
+        }
+
+        this.lastFrameTime = currentTime;
+        this.lastLeftPosition = range.offsetLeft;
     }
 
     startDrag(e, type, range) {
@@ -324,12 +379,22 @@ class Timeline {
         this.minDate = Math.floor(minDate + ((left - this.padding) / totalWidth) * (maxDate - minDate));
         this.maxDate = Math.floor(minDate + ((right - this.padding) / totalWidth) * (maxDate - minDate));
         this.updateDateRange(range);
+        this.updateInfoDisplay(range);
     }
 
     endDrag() {
         if (this.isDragging) {
             this.isDragging = false;
             this.filter();
+            this.updateInfoDisplay(document.querySelector('#timeline div'));
         }
+    }
+
+    getMinDate() {
+        return this.minDate;
+    }
+
+    getMaxDate() {
+        return this.maxDate;
     }
 }

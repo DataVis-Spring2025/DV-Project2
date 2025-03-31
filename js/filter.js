@@ -17,6 +17,8 @@ export class Filter {
 			//vis.updateChart()
 			vis.updateVis();
 		});
+
+		return filteredData;
 	}
 
 	static filterDataByDate(data, minDate, maxDate) {

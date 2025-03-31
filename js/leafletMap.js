@@ -88,53 +88,37 @@ class LeafletMap {
       )
       .attr("r", (d) => 3) // --- TO DO- want to make radius proportional to earthquake size?
       .on("mouseover", function (event, d) {
-        //function to add mouseover event
-        d3.select(this)
-          .transition() //D3 selects the object we have moused over in order to perform operations on it
-          .duration("150") //how long we are transitioning between the two states (works like keyframes)
-          .attr("fill", "red") //change the fill
-          .attr("r", 4); //change radius
-
-        //create a tool tip
         d3.select("#tooltip")
-          .style("opacity", 1)
-          .style("z-index", 1000000)
-          // Format number with million and thousand separator
-          //***** TO DO- change this tooltip to show useful information about the quakes
-          // Define time format
-const formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+          .style("display", "block") // Change to display block
+          .style("z-index", 1000000);
 
-// Update tooltip
-d3.select("#tooltip").html(
-  `<div class="tooltip-label">
-    <img src="images/location-icon.png" alt="Location" width="20" height="20"> <span class="bold-label">Place:</span> ${d.place}<br>
-    <img src="images/clock-icon.png" alt="Time" width="20" height="20"> <span class="bold-label">Time:</span> ${formatTime(new Date(d.time))}<br>
-    <img src="images/magnitude-icon.png" alt="Magnitude" width="20" height="20"> <span class="bold-label">Magnitude:</span> ${d.mag}<br>
-    <img src="images/depth-icon.png" alt="Depth" width="20" height="20"> <span class="bold-label">Depth:</span> ${d.depth}'km <br>
-    <img src="images/latitude-icon.png" alt="Latitude" width="20" height="20"> <span class="bold-label">Latitude:</span> ${d.latitude}<br>
-    <img src="images/longitude-icon.png" alt="Longitude" width="20" height="20"> <span class="bold-label">Longitude:</span> ${d.longitude}
-  </div>`
-);
+        const formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S");
 
-
-
-})
+        d3.select("#tooltip").html(
+          `<div class="tooltip-label">
+            <img src="images/location-icon.png" alt="Location" width="20" height="20"> <span class="bold-label">Place:</span> ${d.place}<br>
+            <img src="images/clock-icon.png" alt="Time" width="20" height="20"> <span class="bold-label">Time:</span> ${formatTime(new Date(d.time))}<br>
+            <img src="images/magnitude-icon.png" alt="Magnitude" width="20" height="20"> <span class="bold-label">Magnitude:</span> ${d.mag}<br>
+            <img src="images/depth-icon.png" alt="Depth" width="20" height="20"> <span class="bold-label">Depth:</span> ${d.depth}'km <br>
+            <img src="images/latitude-icon.png" alt="Latitude" width="20" height="20"> <span class="bold-label">Latitude:</span> ${d.latitude}<br>
+            <img src="images/longitude-icon.png" alt="Longitude" width="20" height="20"> <span class="bold-label">Longitude:</span> ${d.longitude}
+          </div>`
+        );
+      })
       .on("mousemove", (event) => {
-        //position the tooltip
         d3.select("#tooltip")
           .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY + 10 + "px");
+          .style("top", event.pageY + 10 + "px"); // Ensure tooltip follows cursor
       })
       .on("mouseleave", function () {
-        //function to add mouseover event
-        d3.select(this)
-          .transition() //D3 selects the object we have moused over in order to perform operations on it
-          .duration("150") //how long we are transitioning between the two states (works like keyframes)
-          .attr("fill", "steelblue") //change the fill  TO DO- change fill again
-          .attr("r", 3); //change radius
+        d3.select("#tooltip").style("display", "none"); // Change to display none
+      })
 
-        d3.select("#tooltip").style("opacity", 0); //turn off the tooltip
-      });
+    // Emit an event when all dots are rendered
+    setTimeout(() => {
+      const event = new Event('dotsRendered');
+      document.dispatchEvent(event); // Use document to dispatch the event
+    }, 0); // Ensure this runs after rendering is complete
 
     //handler here for updating the map, as you zoom in and out
     vis.theMap.on("zoomend", function () {
@@ -149,13 +133,13 @@ d3.select("#tooltip").html(
       vis.baseLayers[selectedLayer].addTo(vis.theMap);
       vis.updateVis();
     });
-
   }
 
   updateVis() {
     let vis = this;
 
     const bounds = vis.theMap.getBounds();
+    const zoomLevel = vis.theMap.getZoom(); // Get current zoom level
     const filteredData = vis.data.filter((d) =>
       bounds.contains([d.latitude, d.longitude])
     );
@@ -174,7 +158,112 @@ d3.select("#tooltip").html(
         "cy",
         (d) => vis.theMap.latLngToLayerPoint([d.latitude, d.longitude]).y
       )
-      .attr("r", (d) => 3);
+      .attr("r", (d) => this.sidebar.animationsEnabled ? this.timeline.isPlaying ? 0 : this.calculateScaledRadius(d, zoomLevel) : this.calculateConstantRadius()) // Use constant radius if animations are disabled
+      .style("opacity", (d) => this.sidebar.animationsEnabled ? this.timeline.isPlaying ? 0 : this.calculateStaticOpacity(d) : 1) // Full opacity if animations are disabled
+      .on("mouseover", function (event, d) {
+        d3.select("#tooltip")
+          .style("display", "block")
+          .style("z-index", 1000000)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px")
+
+        const formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S");
+
+        d3.select("#tooltip").html(
+          `<div class="tooltip-label">
+            <img src="images/location-icon.png" alt="Location" width="20" height="20"> <span class="bold-label">Place:</span> ${d.place}<br>
+            <img src="images/clock-icon.png" alt="Time" width="20" height="20"> <span class="bold-label">Time:</span> ${formatTime(new Date(d.time))}<br>
+            <img src="images/magnitude-icon.png" alt="Magnitude" width="20" height="20"> <span class="bold-label">Magnitude:</span> ${d.mag}<br>
+            <img src="images/depth-icon.png" alt="Depth" width="20" height="20"> <span class="bold-label">Depth:</span> ${d.depth}'km <br>
+            <img src="images/latitude-icon.png" alt="Latitude" width="20" height="20"> <span class="bold-label">Latitude:</span> ${d.latitude}<br>
+            <img src="images/longitude-icon.png" alt="Longitude" width="20" height="20"> <span class="bold-label">Longitude:</span> ${d.longitude}
+          </div>`
+        );
+      })
+      .on("mousemove", (event) => {
+        d3.select("#tooltip")
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY + 10 + "px"); // Ensure tooltip follows cursor
+      })
+      .on("mouseleave", function () {
+        d3.select("#tooltip").style("display", "none"); // Change to display none
+      })
+      .transition()
+      .duration((d) => this.sidebar.animationsEnabled && this.timeline.isPlaying ? this.calculateAnimationDuration(d) : 0) // Animate only if animations are enabled and playing
+      .ease(d3.easeLinear)
+      .attr("r", (d) => this.sidebar.animationsEnabled ? this.calculateScaledRadius(d, zoomLevel) : this.calculateConstantRadius()) // Use constant radius if animations are disabled
+      .style("opacity", (d) => this.sidebar.animationsEnabled ? this.calculateOpacity(d) : 1) // Full opacity if animations are disabled
+  }
+
+  calculateScaledRadius(d, zoomLevel) {
+    const baseRadius = +d.mag; // Base radius proportional to magnitude
+    const scaleFactor = Math.pow(2, zoomLevel - 2); // Scale factor increases with zoom level
+    return baseRadius * scaleFactor; // Adjust radius based on zoom level
+  }
+
+  calculateConstantRadius() {
+    return 3; // Fixed radius of 3 when animations are off, no scaling
+  }
+
+  calculateAnimationDuration(d) {
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity * 2000; // Scale duration (e.g., 2000ms max)
+  }
+
+  calculateRadius(d) {
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity * +d.mag; // Scale radius based on proximity
+  }
+
+  calculateOpacity(d) {
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity; // Scale opacity directly based on proximity (start invisible, become visible)
+  }
+
+  calculateStaticOpacity(d) {
+    // Dynamically calculate opacity when the timeline is paused
+    const timelineMinDate = this.timeline.minDate;
+    const timelineMaxDate = this.timeline.maxDate;
+    const eventDate = new Date(d.time).getTime();
+
+    if (eventDate < timelineMinDate || eventDate > timelineMaxDate) return 0;
+
+    const totalRange = timelineMaxDate - timelineMinDate;
+    const proximity = (eventDate - timelineMinDate) / totalRange;
+
+    return proximity; // Scale opacity directly based on proximity
+  }
+
+  linkTimeline(timeline) {
+    this.timeline = timeline;
+  }
+
+  linkSidebar(sidebar) {
+    this.sidebar = sidebar; // Link the sidebar to access the animation toggle state
   }
 
   renderVis() {
