@@ -14,7 +14,6 @@ export class Filter {
 
 		this.visualizations.forEach((vis) => {
 			vis.data = filteredData;
-			//vis.updateChart()
 			vis.updateVis();
 		});
 

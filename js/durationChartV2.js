@@ -36,10 +36,10 @@ class DurationChart {
             .attr("stroke-width", 2)
             .style("display", "none");
   
-        vis.updateChart();
+        vis.updateVis();
     }
   
-    updateChart() {
+    updateVis() {
         let vis = this;
   
         // Bin durations
