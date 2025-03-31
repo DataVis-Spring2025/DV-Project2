@@ -62,6 +62,15 @@ class MagnitudeChart {
       .attr("stroke-width", 2)
       .style("display", "none");
 
+    vis.svg.append("text")
+      .attr("class", "chart-title") // Add a class to prevent removal
+      .attr("x", vis.width / 2)
+      .attr("y", -10) // Adjust positioning as needed
+      .attr("text-anchor", "middle")
+      .attr("font-size", "16px")
+      .attr("font-weight", "bold")
+      .text("Earthquake Magnitude Distribution");
+
     vis.updateVis();
   }
 
@@ -84,7 +93,7 @@ class MagnitudeChart {
       .nice()
       .range([vis.height, 0]);
   // Clear previous chart elements except brush
-  vis.svg.selectAll("*:not(circle)").remove();
+  vis.svg.selectAll("*:not(circle):not(.chart-title)").remove();
 
   // X-axis
   vis.svg.append("g")
@@ -149,7 +158,7 @@ class MagnitudeChart {
 
       vis.tooltip
         .style("display", "block")
-        .html(`Magnitude: ${closest.mag.toFixed(1)}<br>Count: ${closest.count}`)
+        .html(`Magnitude: ${closest.mag.toFixed(1)}<br># of Quakes: ${closest.count}`)
         .style("top", (event.pageY - 10) + "px")
         .style("left", (event.pageX + 10) + "px");
     })
