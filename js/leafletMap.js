@@ -26,19 +26,43 @@ class LeafletMap {
     vis.topoUrl = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
     vis.topoAttr = 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)';
 
-    //Stamen Terrain
-    vis.stUrl = 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}';
-    vis.stAttr = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
     //OpenStreetMap Mapnik
     vis.osmUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
     vis.osmAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+    vis.cyclOSMUrl = 'https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png';
+    vis.cyclOSMAttr = '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+    vis.topgreyUrl = 'http://sgx.geodatenzentrum.de/wmts_topplus_open/tile/1.0.0/web_grau/default/WEBMERCATOR/{z}/{y}/{x}.png';
+    vis.topgreyAttr = 'Map data: &copy; <a href="http://www.govdata.de/dl-de/by-2-0">dl-de/by-2-0</a>';
+
+    vis.CARTdarkUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+    vis.CARTdarkAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+    vis.NATgeoUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}';
+    vis.NATgeoAttr = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC';
+
+    vis.WorldShadedUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}';
+    vis.WorldShadedAttr = 'Tiles &copy; Esri &mdash; Source: Esri';
+
+    vis.WorldTerrainUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}';
+    vis.WorldTerrainAttr = 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS';
+
+    vis.WorldPhysicalUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}';
+    vis.WorldPhysicalAttr = 'Tiles &copy; Esri &mdash; Source: US National Park Service';
+
     vis.baseLayers = {
       'topo': L.tileLayer(vis.topoUrl, { attribution: vis.topoAttr, ext: 'png' }),
       'esri': L.tileLayer(vis.esriUrl, { attribution: vis.esriAttr }),
-      'stamen': L.tileLayer(vis.stUrl, { attribution: vis.stAttr, ext: 'png' }),
-      'osm': L.tileLayer(vis.osmUrl, { attribution: vis.osmAttr })
+      'osm': L.tileLayer(vis.osmUrl, { attribution: vis.osmAttr }),
+      'cyclosm': L.tileLayer(vis.cyclOSMUrl, { attribution: vis.cyclOSMAttr }),
+      'topgrey': L.tileLayer(vis.topgreyUrl, { attribution: vis.topgreyAttr }),
+      'CARTdark': L.tileLayer(vis.CARTdarkUrl, { attribution: vis.CARTdarkAttr }),
+      'NATgeo': L.tileLayer(vis.NATgeoUrl, { attribution: vis.NATgeoAttr }),
+      'WorldShaded': L.tileLayer(vis.WorldShadedUrl, { attribution: vis.WorldShadedAttr }),
+      'WorldTerrain': L.tileLayer(vis.WorldTerrainUrl, { attribution: vis.WorldTerrainAttr }),
+      'WorldPhysical': L.tileLayer(vis.WorldPhysicalUrl, { attribution: vis.WorldPhysicalAttr }),
+
     };
 
     vis.theMap = L.map('my-map', {
