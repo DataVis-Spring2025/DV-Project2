@@ -41,8 +41,8 @@ Use nginx or a vscode extension like live server to run it locally.
 - Thing 1
 - Thing 2
 ### Rashi Loni
-- Thing 1
-- Thing 2
+- Motivation
+- Video
 ### Samraysh Pellakur
 - Thing 1
 - Thing 2
