@@ -52,6 +52,8 @@ loadData(`data/AllYears/${year}.csv`)
 
       // Initialize Sidebar with data
 			timeline.linkSidebar(sidebar);
+			leafletMap.linkSidebar(sidebar);
+
 			const initalFilter = () => filter.apply(
 				timeline.minDate, 
 				timeline.maxDate, 
