@@ -44,6 +44,8 @@ class Sidebar {
 
         this.filter = () => { console.log("Sidebar filter called before override"); };
 
+        this.animationsEnabled = true; // Add a property to track animation state
+
         this.init();
     }
 
@@ -78,46 +80,15 @@ class Sidebar {
             this.filter(); // Call the filter method
         });
 
-        // Initialize dropdown
-        this.initYearDropdown();
-
         // Initialize sidebar toggle
         this.initSidebarToggle();
 
-        // Initialize year selection
-        this.initYearSelection();
+        // Add animation toggle
+        this.initAnimationToggle();
     }
 
     addElement(element) {
         this.container.appendChild(element);
-    }
-
-    initYearDropdown() {
-        let yearSelect = document.getElementById("yearSelect");
-
-        // Create the yearSelect element if it doesn't exist
-        if (!yearSelect) {
-            yearSelect = document.createElement("select");
-            yearSelect.id = "yearSelect";
-            this.container.appendChild(yearSelect);
-        }
-
-        const startYear = 2004;
-        const endYear = 2025;
-
-        for (let year = startYear; year <= endYear; year++) {
-            const option = document.createElement("option");
-            option.value = year.toString();
-            option.textContent = year.toString();
-            yearSelect.appendChild(option);
-        }
-
-        const rangeOption = document.createElement("option");
-        rangeOption.value = `${startYear}-${endYear}`;
-        rangeOption.textContent = `${startYear}-${endYear}`;
-        yearSelect.appendChild(rangeOption);
-
-        yearSelect.value = "2024";
     }
 
     initSidebarToggle() {
@@ -142,6 +113,28 @@ class Sidebar {
                 this.filter(); // Call the filter method when the year changes
             });
         });
+    }
+
+    initAnimationToggle() {
+        const animationToggleContainer = document.createElement("div");
+        animationToggleContainer.style.marginTop = "10px";
+
+        const animationToggleLabel = document.createElement("label");
+        animationToggleLabel.textContent = "Enable Animations:";
+        animationToggleLabel.style.marginRight = "10px";
+
+        const animationToggleCheckbox = document.createElement("input");
+        animationToggleCheckbox.type = "checkbox";
+        animationToggleCheckbox.checked = this.animationsEnabled;
+
+        animationToggleCheckbox.addEventListener("change", (event) => {
+            this.animationsEnabled = event.target.checked;
+            this.filter(); // Trigger the filter to update the map
+        });
+
+        animationToggleContainer.appendChild(animationToggleLabel);
+        animationToggleContainer.appendChild(animationToggleCheckbox);
+        this.container.appendChild(animationToggleContainer);
     }
 }
 
