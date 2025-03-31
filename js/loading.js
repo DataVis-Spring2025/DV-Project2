@@ -6,24 +6,34 @@ const loadingMessage = document.getElementById("loading-msg");
 function showLoading(message) {
     loadingContainer.style.display = "block";
     updateLoadingMessage(message);
-    updateProgressBar(0); // Reset progress bar at the start
 }
 
-function hideLoading() {
-    loadingContainer.style.display = "none";
+async function hideLoading() {
+    updateLoadingMessage("Loading complete"); // Show "Loading complete" before hiding
+    updateProgressBar(100); // Ensure the bar is set to 100%
+    setTimeout(() => {
+        loadingContainer.style.display = "none";
+    }, 1000); // Add a 1000ms delay before hiding
 }
 
-function updateLoadingMessage(message) {
+async function updateLoadingMessage(message) {
     requestAnimationFrame(() => {
         loadingMessage.innerHTML = message;
     });
 }
 
-function updateProgressBar(progress) {
+function calculateCSVProgress(progress) {
+    return progress * 0.82; // CSV loading progress (0% to 82%)
+}
+
+function calculateMapDrawingProgress(progress) {
+    return 82 + (progress * 0.18); // Map drawing progress (82% to 100%)
+}
+
+async function updateProgressBar(progress) {
     requestAnimationFrame(() => {
-        progress = Math.min(100, Math.max(0, progress));
         progressBar.style.width = `${progress}%`;
-        progressBar.textContent = `${progress}%`;
+        progressBar.textContent = `${Math.round(progress)}%`;
     });
 }
 
@@ -32,112 +42,59 @@ function loadCSVWithProgress(url) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
-
         xhr.onprogress = (event) => {
             if (event.lengthComputable) {
                 const progress = Math.round((event.loaded / event.total) * 100);
-                updateProgressBar(progress);
+                updateProgressBar(calculateCSVProgress(progress)); // Use CSV progress calculation
             }
         };
-
         xhr.onload = () => {
             if (xhr.status === 200) {
-                updateProgressBar(100);
-                resolve(d3.csvParse(xhr.responseText));
+                const data = d3.csvParse(xhr.responseText);
+                resolve(data);
             } else {
                 reject(new Error(`Failed to load CSV: ${xhr.statusText}`));
             }
         };
-
         xhr.onerror = () => reject(new Error("Network error while loading CSV"));
         xhr.send();
     });
 }
 
-async function loadData(url) {
-    showLoading("Loading data, please wait...");
+function loadData(url) {
+    return new Promise((resolve, reject) => {
+        showLoading("Loading data, please wait");
 
-    try {
-        const data = await loadCSVWithProgress(url);
+        loadCSVWithProgress(url)
+            .then((data) => {
+                updateProgressBar(100);
+                console.log("number of items: " + data.length);
+                updateLoadingMessage("Optimizing data for filtering");
 
-        updateLoadingMessage("Processing data...");
-        await new Promise(resolve => setTimeout(resolve, 100)); // Give UI time to update
+                // Process and sort data
+                data.forEach((d) => {
+                    d.latitude = +d.latitude;
+                    d.longitude = +d.longitude;
+                    d.mag = +d.mag;
+                    d.depth = +d.depth;
+                    d.times = +d.time;
+                    d.parsedTime = new Date(d.time); // Cache parsed date for faster sorting
+                    d.duration2 = Math.pow(10, (0.5 * d.mag - 1.5)) * d.rms;
+                    d.duration = (new Date(d.updated) - new Date(d.time)) / (1000*60);
+                });
 
-        data.forEach(d => {
-            d.latitude = +d.latitude;
-            d.longitude = +d.longitude;
-            d.mag = +d.mag;
-            d.depth = +d.depth;
-            d.times = +d.time;
-            d.parsedTime = new Date(d.time);
-        });
+                data.sort((a, b) => a.parsedTime - b.parsedTime);
 
-        updateProgressBar(70);
-        await new Promise(resolve => setTimeout(resolve, 100)); // Let UI update
-
-        data.sort((a, b) => a.parsedTime - b.parsedTime);
-
-        updateProgressBar(90);
-        await new Promise(resolve => setTimeout(resolve, 100)); // UI update delay
-
-        updateLoadingMessage("Data loaded successfully");
-        updateProgressBar(100);
-        await new Promise(resolve => setTimeout(resolve, 500)); // Small delay before hiding
-
-        hideLoading();
-        return data;
-    } catch (error) {
-        console.error(error);
-        hideLoading();
-        throw error;
-    }
+                updateLoadingMessage("Drawing map"); // Update message to "Drawing map"
+                updateProgressBar(calculateMapDrawingProgress(calculateCSVProgress(100))); // Update progress bar for map drawing
+                resolve(data);
+            })
+            .catch((error) => {
+                console.error(error);
+                hideLoading();
+                reject(error);
+            });
+    });
 }
 
-export { showLoading, hideLoading, updateLoadingMessage, updateProgressBar, loadCSVWithProgress, loadData };
-/*function loadData(year) {
-    d3.csv(`data/AllYears/${year}.csv`)
-      .then((data) => {
-        console.log(`Loaded data for year: ${year}`);
-        console.log("Number of items: " + data.length);
-  
-        data.forEach((d) => {
-          d.latitude = +d.latitude;
-          d.longitude = +d.longitude;
-          d.mag = +d.mag;
-        });
-  
-        globalData = data;  // Store data globally for later use
-  
-        // Check if the map is already initialized, if not, initialize it
-        if (!leafletMap) {
-          leafletMap = new LeafletMap({ parentElement: "#my-map" }, data);
-        } else {
-          // Update the map's data and visualizations if the map is already initialized
-          leafletMap.data = data;
-          leafletMap.updateVis();
-        }
-  
-        // Check if the line chart is already initialized, if not, initialize it
-        if (!lineChart) {
-          lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart", magmin, magmax }, data);
-        } else {
-          // Update the line chart's data if it's already initialized
-          lineChart.data = data;
-          lineChart.updateChart(magmin, magmax);
-        }
-  
-        // Remove the previous timeline if it exists
-        if (timeline) {
-          timeline.remove();  // This should remove the old timeline from the DOM
-        }
-  
-        // Initialize the new timeline with the new data
-        timeline = new Timeline(data);
-        timeline.filter = filter; // Set the filter function to be used on timeline update
-        timeline.updateTimeline();  // Call updateTimeline to re-render the timeline
-  
-        // Initial filter on load
-        filter();
-      })
-      .catch((error) => console.error(error));
-  }*/
+export { calculateMapDrawingProgress, showLoading, hideLoading, updateLoadingMessage, updateProgressBar, loadCSVWithProgress, loadData };
