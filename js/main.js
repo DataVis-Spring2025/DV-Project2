@@ -2,7 +2,7 @@ import { loadData, hideLoading, updateLoadingMessage, updateProgressBar, calcula
 import { Filter } from './filter.js';
 import { Sidebar } from './sidebar.js';
 
-let year = "2024-2025";
+let year = "2004-2025";
 
 loadData(`data/AllYears/${year}.csv`)
 	.then((data) => {
