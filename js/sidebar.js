@@ -91,8 +91,10 @@ class Sidebar {
         // Initialize year selection
         // this.initYearSelection();
 
+        this.initAnimationToggle();
         this.initAudioToggle();
         this.initShakeToggle();
+        
         this.container.classList.toggle("open");
     }
 
