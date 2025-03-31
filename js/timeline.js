@@ -8,13 +8,13 @@ class Timeline {
         this.isPlaying = false;
         this.isDragging = false;
         this.dragType = null;
-        this.startX = 0;
-        this.startWidth = 0;
-        this.startLeft = 0;
+        this.startX = 220;
+        this.startWidth = 220;
+        this.startLeft = 220;
         this.padding = 50;
         this.width = window.innerWidth - this.padding * 2;
         this.height = 50;
-        this.tickSpacing = 100;
+        this.tickSpacing = 50;
         this.tickFormat = "%b %Y";
         this.selectedYear = null;
         this.speed = 30000;
@@ -62,7 +62,7 @@ class Timeline {
         // Range div (draggable timeline range)
         const range = document.createElement('div');
         range.style.position = 'absolute';
-        range.style.left = '50px';
+        range.style.right = '50px';
         range.style.width = this.initialTimelineWidth + 'px';
         range.style.height = this.height + 'px';
         range.style.backgroundColor = '#ddd';

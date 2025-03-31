@@ -45,7 +45,7 @@ class Sidebar {
         this.filter = () => { console.log("Sidebar filter called before override"); };
 
         this.audioEnabled = true;
-        this.shakeEnabled = true;
+        this.shakeEnabled = false;
         this.init();
     }
 
@@ -182,11 +182,10 @@ class Sidebar {
 
         const shakeToggleCheckbox = document.createElement("input");
         shakeToggleCheckbox.type = "checkbox";
-        shakeToggleCheckbox.checked = this.audioEnabled;
+        shakeToggleCheckbox.checked = false;
 
         shakeToggleCheckbox.addEventListener("change", (event) => {
-            this.shakeEnabled = event.target.checked;
-            this.filter(); // Trigger the filter to update the map
+            this.shakeEnabled = event.target.checked; 
         });
 
         shakeToggleContainer.appendChild(shakeToggleLabel);
