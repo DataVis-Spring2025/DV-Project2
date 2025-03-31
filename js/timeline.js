@@ -11,8 +11,8 @@ class Timeline {
         this.startX = 220;
         this.startWidth = 220;
         this.startLeft = 220;
-        this.padding = 50;
-        this.width = window.innerWidth - this.padding * 2;
+        this.padding = 220;
+        this.width = (window.innerWidth) - 270;
         this.height = 50;
         this.tickSpacing = 50;
         this.tickFormat = "%b %Y";
@@ -51,7 +51,7 @@ class Timeline {
         timelineContainer.style.position = 'relative';
         timelineContainer.style.width = '100%';
         timelineContainer.style.height = this.height + 'px';
-        timelineContainer.style.border = '1px solid #ccc';
+        // timelineContainer.style.border = '1px solid #ccc';
         timelineContainer.style.margin = '20px 0';
 
         const timelineButtons = document.createElement('div');
@@ -79,11 +79,12 @@ class Timeline {
         // Range div (draggable timeline range)
         const range = document.createElement('div');
         range.style.position = 'absolute';
-        range.style.right = '50px';
+        range.style.left = '220px';
         range.style.width = this.initialTimelineWidth + 'px';
         range.style.height = this.height + 'px';
         range.style.backgroundColor = '#ddd';
         range.style.cursor = 'pointer';
+        
 
         // Left Handle
         const leftHandle = this.createHandle('-10px', 'border-right: 2px solid #555;');
@@ -138,7 +139,7 @@ const timeScale = d3.scaleTime()
 // Major axis with standard tick format
 const xAxis = d3.axisBottom(timeScale)
     .tickFormat(d3.timeFormat(this.tickFormat))
-    .tickValues([timeScale.domain()[0], ...timeScale.ticks(Math.max(1, Math.floor(this.width / this.tickSpacing))), timeScale.domain()[1]]);
+    .tickValues([timeScale.domain()[1], ...timeScale.ticks(Math.max(1, Math.floor(this.width / this.tickSpacing))), timeScale.domain()[1]]);
 
 // Generate minor tick values for odd-numbered years
 const allYears = d3.timeYear.range(timeScale.domain()[0], timeScale.domain()[1]);
@@ -151,9 +152,9 @@ const xAxisMinor = d3.axisBottom(timeScale)
 
 const svg = d3.select(timelineContainer)
     .append("svg")
-    .attr("width", this.width)
+    .attr("width", '500px')
     .attr("height", this.height + 10) // Add extra space for ticks
-    .style("margin-left", this.padding + "px")
+    .style("margin-left",  '220px')
     .style("overflow", "visible")
     .attr("transform", `translate(0,${this.height})`);
 
