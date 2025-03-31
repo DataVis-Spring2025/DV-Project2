@@ -21,7 +21,7 @@ loadData(`data/AllYears/${year}.csv`)
 			const durationChart2 = new DurationChart({ parentElement: "#durationChart2" }, data);
 
 			// Initialize Filter after visualizations are created
-			const filter = new Filter(data, [leafletMap, lineChart, depthChart, durationChart, durationChart2]);
+			const filter = new Filter(data, [leafletMap, depthChart, lineChart, durationChart, durationChart2]);
 
       // Initialize Sidebar with data
       const sidebar = new Sidebar("sidebar", data);

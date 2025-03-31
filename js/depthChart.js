@@ -6,10 +6,10 @@ class DepthChart {
       this.width = 700 - this.margin.left - this.margin.right;
       this.height = 300 - this.margin.top - this.margin.bottom;
 
-      this.initChart();
+      this.initVis();
   }
 
-  initChart() {
+  initVis() {
       let vis = this;
 
       vis.svg = d3.select(vis.parentElement)
@@ -64,10 +64,10 @@ class DepthChart {
           .style("text-anchor", "middle")
           .text("Number of Earthquakes");
 
-      vis.updateChart();
+      vis.updateVis();
   }
 
-  updateChart() {
+  updateVis() {
       let vis = this;
 
       const maxDepth = d3.max(vis.data, d => d.depth);
@@ -130,10 +130,10 @@ class DepthChart {
           vis.hoverCircle.style("display", "none");
       });
 
-      vis.renderChart();
+      vis.renderVis();
   }
 
-  renderChart() {
+  renderVis() {
       let vis = this;
       vis.xAxisG.call(d3.axisBottom(vis.x));
       vis.yAxisG.call(d3.axisLeft(vis.y));

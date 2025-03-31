@@ -26,9 +26,7 @@ class MagnitudeChart {
           document.getElementById("depthChart").style.display = "block";
       } else if (selected === "duration") {
           document.getElementById("durationChart").style.display = "block";
-      } else if (selected === "duration2") {
-        document.getElementById("durationChart2").style.display = "block";
-      } 
+      }
     });
   }
 
