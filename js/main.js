@@ -2,7 +2,7 @@ import { loadData, hideLoading, updateLoadingMessage, updateProgressBar, calcula
 import { Filter } from './filter.js';
 import { Sidebar } from './sidebar.js';
 
-let year = "2004-2025";
+let year = "2024-2025";
 
 loadData(`data/AllYears/${year}.csv`)
 	.then((data) => {
@@ -41,9 +41,12 @@ loadData(`data/AllYears/${year}.csv`)
 			leafletMap.linkTimeline(timeline);
 
 			const lineChart = new MagnitudeChart({ parentElement: "#magnitudeChart" }, data);
+			const depthChart = new DepthChart({ parentElement: "#depthChart" }, data);
+			const durationChart = new DChart({ parentElement: "#durationChart" }, data);
+			//const durationChart2 = new DurationChart({ parentElement: "#durationChart2" }, data);
 
 			// Initialize Filter after visualizations are created
-			const filter = new Filter(data, [leafletMap, lineChart]);
+			const filter = new Filter(data, [leafletMap, depthChart, lineChart, durationChart]);
 
 			leafletMap.linkSidebar(sidebar);
 

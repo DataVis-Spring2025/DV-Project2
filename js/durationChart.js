@@ -1,0 +1,169 @@
+class DChart {
+  constructor({ parentElement }, data) {
+    this.parentElement = parentElement;
+    this.data = data;
+    this.margin = { top: 20, right: 20, bottom: 60, left: 60 };
+    this.width = 700 - this.margin.left - this.margin.right;
+    this.height = 300 - this.margin.top - this.margin.bottom;
+
+    this.initVis();
+  }
+
+  initVis() {
+    let vis = this;
+    vis.svg = d3.select(vis.parentElement)
+      .append("svg")
+      .attr("width", vis.width + vis.margin.left + vis.margin.right)
+      .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+
+    // Tooltip
+    vis.tooltip = d3.select(vis.parentElement)
+      .append("div")
+      .attr("class", "tooltip3")
+      .style("position", "absolute")
+      .style("background", "#fff")
+      .style("border", "1px solid #ccc")
+      .style("padding", "5px")
+      .style("border-radius", "5px")
+      .style("display", "none")
+      .style("pointer-events", "none");
+
+    // Circle marker for hover effect
+    vis.hoverCircle = vis.svg.append("circle")
+      .attr("r", 5)
+      .attr("fill", "none")  // No fill
+      .attr("stroke", "orange")  // Outline color
+      .attr("stroke-width", 2)
+      .style("display", "none");
+/*
+    vis.svg.append("text")
+      .attr("class", "chart-title") // Add a class to prevent removal
+      .attr("x", vis.width / 2)
+      .attr("y", -10) // Adjust positioning as needed
+      .attr("text-anchor", "middle")
+      .attr("font-size", "16px")
+      .attr("font-weight", "bold")
+      .text("Earthquake Duration Distribution");
+*/
+     
+
+    vis.updateVis();
+  }
+
+  updateVis() {
+    let vis = this;
+    const maxDuration2 = d3.max(vis.data, d => d.depth);
+    const duration2Counts = d3.range(0, maxDuration2 + 1, 5).map(duration2 => {
+      return {
+        duration2: duration2,
+        count: vis.data.filter(d => d.duration2 >= duration2 && d.duration2 < duration2 + 0.1).length
+      };
+    });
+  
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(vis.data, d => d.duration2)])
+      .range([0, vis.width]);
+  
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(duration2Counts, d => d.count)])
+      .nice()
+      .range([vis.height, 0]);
+  
+    vis.svg.selectAll("*:not(circle):not(.chart-title)").remove();
+  
+    // X-axis
+    vis.svg.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", "translate(0," + vis.height + ")")
+      .call(d3.axisBottom(x).ticks(10));
+  
+    // Y-axis
+    vis.svg.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y));
+  
+    // X-axis label
+    vis.svg.append("text")
+      .attr("class", "x-axis-label")
+      .attr("x", vis.width / 2)
+      .attr("y", vis.height + vis.margin.bottom - 10)
+      .style("text-anchor", "middle")
+      .text("Estimated Duration (seconds)");
+  
+    // Y-axis label
+    vis.svg.append("text")
+      .attr("class", "y-axis-label")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -vis.height / 2)
+      .attr("y", -vis.margin.left + 20)
+      .style("text-anchor", "middle")
+      .text("Number of Earthquakes");
+  
+    // Append brush group BEFORE the line so it doesn’t block mouse events
+    /*
+    vis.brushG = vis.svg.append('g')
+      .attr('class', 'brush x-brush');
+  
+    vis.brush = d3.brushX()
+      .extent([[0, 0], [vis.width, vis.height]])
+      .on('brush', function({selection}) {
+          if (selection) vis.brushed(selection);
+      })
+      .on('end', function({selection}) {
+          if (!selection) vis.brushed(null);
+      });
+  
+    vis.brushG
+      .call(vis.brush);
+      */
+  
+    const line = d3.line()
+      .x(d => x(d.duration2))
+      .y(d => y(d.count));
+  
+    const path = vis.svg.append("path")
+      .data([duration2Counts])
+      .attr("class", "line")
+      .attr("d", line)
+      .attr("fill", "none")
+      .attr("stroke", "pink")
+      .attr("stroke-width", 2);
+  
+    // Tooltip and circle marker hover effect
+    path.on("mousemove", (event) => {
+        const mouseX = d3.pointer(event)[0];
+        const closest = duration2Counts.reduce((prev, curr) =>
+          Math.abs(x(curr.duration2) - mouseX) < Math.abs(x(prev.duration2) - mouseX) ? curr : prev
+        );
+  
+        vis.hoverCircle
+          .style("display", "block")
+          .attr("cx", x(closest.duration2))
+          .attr("cy", y(closest.count));
+  
+        vis.tooltip
+          .style("display", "block")
+          .html(`Duration: ${closest.duration2.toFixed(1)} seconds<br># of Quakes: ${closest.count}`)
+          .style("top", (event.pageY - 10) + "px")
+          .style("left", (event.pageX + 10) + "px");
+      })
+      .on("mouseout", () => {
+        vis.tooltip.style("display", "none");
+        vis.hoverCircle.style("display", "none");
+      });
+  }
+  /*
+  brushed(selection) {
+    let vis = this;
+    
+    if (selection) {
+        // Get pixel coordinates of brush selection
+        
+    } else {
+    }
+  }
+*/
+  
+}

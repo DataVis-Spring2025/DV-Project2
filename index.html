@@ -25,12 +25,26 @@
 
     <div id="sidebar" style="z-index: 2000;"></div>
 
-    <div id="tooltip"></div>
+    
     <div id="timeline"></div>
+    
     <div id="level3">
+        <select id="attribute-select">
+            <option value="magnitude" selected>Quakes by Magnitude</option>
+            <option value="depth">Quakes by Depth</option>
+            <option value="duration">Quakes by Duration</option>
+        </select>
         <div id="magnitudeChart"></div>
+        <div id="depthChart" style="display: none;"></div>
+        <div id="durationChart" style="display: none;"></div>
+        <div id="durationChart2" style="display: none;"></div>
+        
+        
     </div>
-
+    
+    <div id="tooltip"></div>
+    <div id="tooltip2"></div>
+    <div id="tooltip3"></div>
     <div id="loading-container" class="loading-container">
         <div class="spinner"></div>
         <div class="progress-bar-container">
@@ -54,5 +68,10 @@
     <script src="js/leafletMap.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/magnitudeChart.js"></script>
+    <script src="js/depthChart.js"></script>
+    <script src="js/durationChart.js"></script>
+    <script src="js/durationChartV2.js"></script>
+
+
 </body>
 </html>
