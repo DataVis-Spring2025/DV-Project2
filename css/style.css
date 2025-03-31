@@ -304,3 +304,21 @@ input[type="range"]::-moz-range-thumb {
 #toggleSidebar.shake{
   animation: shake 1s infinite;
 }
+
+input[type="text"]::-webkit-slider-runnable-track {
+  background: none; 
+}
+
+input[type="text"]::-moz-range-track {
+  background: none; 
+}
+
+/* Slider thumb */
+input[type="text"]::-webkit-slider-thumb {
+  background: none; 
+}
+
+input[type="text"]::-moz-range-thumb {
+  background: none; 
+}
+
