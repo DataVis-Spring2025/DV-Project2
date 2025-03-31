@@ -8,16 +8,44 @@
     <link rel="stylesheet" href="css/libraries/leaflet.css">
     <link rel="stylesheet" href="css/libraries/loading-bar.min.css">
     <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div id="my-map"></div>
 
-    <select id="basemap-select" class="basemap-select">
-        <option value="topo">Topo Map</option>
-        <option value="esri">ESRI Satellite</option>
-        <option value="osm">OpenStreetMap</option>
-        <option value="stamen">Stamen Terrain</option>
-    </select>
+    <div id="menusidebar" class="closed">
+        <button id="close-btn" class="close-btn">&times;</button>
+        <div class="dropdown-container">
+            <div class="dropdown-label">Select Map Background</div>
+            <select id="basemap-select" class="basemap-select">
+                <option value="topo">Topo Map</option>
+                <option value="esri">ESRI Satellite</option>
+                <option value="osm">OpenStreetMap</option>
+                
+                <option value="cyclosm">CyclOSM</option>
+                <option value="topgrey">Topo Grey</option>
+                <option value="CARTdark">CARTO Darkmatter</option>
+                <option value="NATgeo">NATgeo</option>
+                <option value="WorldShaded">World Shaded</option>
+                <option value="WorldTerrain">World Terrain</option>
+                <option value="WorldPhysical">World Physical</option>
+
+            </select>
+        </div>
+
+        <div class="data-source">
+            Data Source: <a href="https://earthquake.usgs.gov/earthquakes/search/" target="_blank">usgs.gov</a>
+        </div>
+        <div class="map-source">
+            Map Source: <a href="https://leaflet-extras.github.io/leaflet-providers/preview/" target="_blank">Leaflet Maps</a>
+        </div>
+    </div>
+
+    <!-- menu btn icon-->
+    <button id="menu-btn" class="menu-btn">
+        <i class="fas fa-bars"></i> 
+    </button>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="top:-60px; height: 0px; overflow: visible; position: relative; z-index: 2000;">
         <button id="toggleSidebar" class="btn btn-primary me-md-2" style="margin-right: 10px; z-index: 2000; height:40px">Filter Options</button>

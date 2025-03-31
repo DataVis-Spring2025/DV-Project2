@@ -44,7 +44,7 @@ class Sidebar {
 
         this.filter = () => { console.log("Sidebar filter called before override"); };
 
-        this.audioEnabled = true;
+        this.audioEnabled = false;
         this.shakeEnabled = false;
         this.animationsEnabled = true; // Add a property to track animation state
 
@@ -136,7 +136,7 @@ class Sidebar {
 
         const audioToggleCheckbox = document.createElement("input");
         audioToggleCheckbox.type = "checkbox";
-        audioToggleCheckbox.checked = this.audioEnabled;
+        audioToggleCheckbox.checked = false;
 
         audioToggleCheckbox.addEventListener("change", (event) => {
             this.audioEnabled = event.target.checked;
