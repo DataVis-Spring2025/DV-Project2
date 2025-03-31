@@ -91,6 +91,7 @@ class Sidebar {
 
         this.initAudioToggle();
         this.initShakeToggle();
+        this.container.classList.toggle("open");
     }
 
     addElement(element) {

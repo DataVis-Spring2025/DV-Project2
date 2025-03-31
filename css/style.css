@@ -58,7 +58,7 @@
 /* Make sure it's not affected by floating elements */
 button#toggleSidebar {
   float: none !important; 
-  display: block; 
+  /* display: block;  */
   text-align: right;
 }
 

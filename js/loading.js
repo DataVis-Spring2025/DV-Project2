@@ -6,6 +6,7 @@ const loadingMessage = document.getElementById("loading-msg");
 function showLoading(message) {
     loadingContainer.style.display = "block";
     updateLoadingMessage(message);
+    updateProgressBar(0); // Reset progress bar at the start
 }
 
 function hideLoading() {
@@ -14,7 +15,7 @@ function hideLoading() {
 
 function updateLoadingMessage(message) {
     requestAnimationFrame(() => {
-    loadingMessage.innerHTML = message;
+        loadingMessage.innerHTML = message;
     });
 }
 
@@ -31,62 +32,68 @@ function loadCSVWithProgress(url) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
+
         xhr.onprogress = (event) => {
-        if (event.lengthComputable) {
-            const progress = Math.round((event.loaded / event.total) * 100);
-            updateProgressBar(progress);
-        }
+            if (event.lengthComputable) {
+                const progress = Math.round((event.loaded / event.total) * 100);
+                updateProgressBar(progress);
+            }
         };
+
         xhr.onload = () => {
-        if (xhr.status === 200) {
-            updateProgressBar(100);
-            const data = d3.csvParse(xhr.responseText);
-            resolve(data);
-        } else {
-            reject(new Error(`Failed to load CSV: ${xhr.statusText}`));
-        }
+            if (xhr.status === 200) {
+                updateProgressBar(100);
+                resolve(d3.csvParse(xhr.responseText));
+            } else {
+                reject(new Error(`Failed to load CSV: ${xhr.statusText}`));
+            }
         };
+
         xhr.onerror = () => reject(new Error("Network error while loading CSV"));
         xhr.send();
     });
 }
 
-function loadData(url) {
-    return new Promise((resolve, reject) => {
-        showLoading("Loading data, please wait");
+async function loadData(url) {
+    showLoading("Loading data, please wait...");
 
-        loadCSVWithProgress(url)
-            .then((data) => {
-                updateProgressBar(100);
-                console.log("number of items: " + data.length);
-                updateLoadingMessage("Optimizing data for filtering");
+    try {
+        const data = await loadCSVWithProgress(url);
 
-                // Process and sort data
-                data.forEach((d) => {
-                    d.latitude = +d.latitude;
-                    d.longitude = +d.longitude;
-                    d.mag = +d.mag;
-                    d.depth = +d.depth;
-                    d.times=+d.time;
-                    d.parsedTime = new Date(d.time); // Cache parsed date for faster sorting
-                });
+        updateLoadingMessage("Processing data...");
+        await new Promise(resolve => setTimeout(resolve, 100)); // Give UI time to update
 
-                data.sort((a, b) => a.parsedTime - b.parsedTime);
+        data.forEach(d => {
+            d.latitude = +d.latitude;
+            d.longitude = +d.longitude;
+            d.mag = +d.mag;
+            d.depth = +d.depth;
+            d.times = +d.time;
+            d.parsedTime = new Date(d.time);
+        });
 
-                updateLoadingMessage("Data loaded successfully");
-                hideLoading();
-                resolve(data);
-            })
-            .catch((error) => {
-                console.error(error);
-                hideLoading();
-                reject(error);
-            });
-    });
+        updateProgressBar(70);
+        await new Promise(resolve => setTimeout(resolve, 100)); // Let UI update
+
+        data.sort((a, b) => a.parsedTime - b.parsedTime);
+
+        updateProgressBar(90);
+        await new Promise(resolve => setTimeout(resolve, 100)); // UI update delay
+
+        updateLoadingMessage("Data loaded successfully");
+        updateProgressBar(100);
+        await new Promise(resolve => setTimeout(resolve, 500)); // Small delay before hiding
+
+        hideLoading();
+        return data;
+    } catch (error) {
+        console.error(error);
+        hideLoading();
+        throw error;
+    }
 }
 
 export { showLoading, hideLoading, updateLoadingMessage, updateProgressBar, loadCSVWithProgress, loadData };
-
 /*function loadData(year) {
     d3.csv(`data/AllYears/${year}.csv`)
       .then((data) => {
