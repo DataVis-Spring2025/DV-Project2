@@ -6,10 +6,10 @@ class DChart {
     this.width = 700 - this.margin.left - this.margin.right;
     this.height = 300 - this.margin.top - this.margin.bottom;
 
-    this.initChart();
+    this.initVis();
   }
 
-  initChart() {
+  initVis() {
     let vis = this;
     vis.svg = d3.select(vis.parentElement)
       .append("svg")
@@ -42,10 +42,10 @@ class DChart {
 
      
 
-    vis.updateChart();
+    vis.updateVis();
   }
 
-  updateChart() {
+  updateVis() {
     let vis = this;
     const maxDuration2 = d3.max(vis.data, d => d.depth);
     const duration2Counts = d3.range(0, maxDuration2 + 1, 5).map(duration2 => {
