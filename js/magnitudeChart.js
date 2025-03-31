@@ -61,7 +61,7 @@ class MagnitudeChart {
       .attr("stroke", "orange")  // Outline color
       .attr("stroke-width", 2)
       .style("display", "none");
-
+/*
     vis.svg.append("text")
       .attr("class", "chart-title") // Add a class to prevent removal
       .attr("x", vis.width / 2)
@@ -70,7 +70,7 @@ class MagnitudeChart {
       .attr("font-size", "16px")
       .attr("font-weight", "bold")
       .text("Earthquake Magnitude Distribution");
-
+*/
     vis.updateVis();
   }
 

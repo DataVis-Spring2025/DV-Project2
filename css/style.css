@@ -32,6 +32,18 @@
 }
 
 
+#level3 {
+  width: 40%;
+ /* border: 1px solid red;*/
+  margin-top: 50px; /* Push it down by 50px */
+
+  /* Ensure it's above other elements */
+
+}
+#attribute-select {
+  display: block;
+  margin: 0 auto;
+}
 
 .drag-arrow{
   transform: scaleX(0.2)scaleY(3);
