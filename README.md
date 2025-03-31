@@ -52,7 +52,7 @@ Use nginx or a vscode extension like live server to run it locally.
 - Thing 2
 ### Rashi Loni
 - thing 1
-- Video
+- thing 2
 ### Samraysh Pellakur
 - Thing 1
 - Thing 2
