@@ -60,12 +60,66 @@
 
 .basemap-select {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  /* top: 10px;
+  right: 10px; */
   padding: 5px;
   z-index: 1000;
   align-items: end;
 }
+
+/* menu bar */
+.menu-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;  
+  font-size: 30px;
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+#menusidebar {
+  position: fixed;
+  top: 0;
+  right: -250px; 
+  width: 250px;
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  padding-top: 20px;
+  z-index: 1000;
+}
+
+#menusidebar.open {
+  right: 0; 
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 30px;
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.dropdown-container {
+  margin-top: 40px; 
+  padding: 0 20px;
+}
+
+.dropdown-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+/* */
 
 /* Make sure it's not affected by floating elements */
 button#toggleSidebar {
