@@ -258,7 +258,7 @@ const uniqueMagnitudes = [...new Set(vis.data.map(d => Math.round(d.mag)))].sort
 const numColors = uniqueMagnitudes.length;
 
 // Generate dynamic color range from d3.interpolateGreens
-const colorRange = d3.quantize(d3.interpolateGreens, numColors);
+const colorRange = d3.quantize(d3.interpolateBlues, numColors);
 console.log(numColors);
 
 // Define color scale using dynamically generated domain and range
@@ -293,7 +293,7 @@ const magnitudeColorScale = d3.scaleLinear()
           const depthExtent = d3.extent(depthValues);
           const depthRange = Math.floor((depthExtent[1] - depthExtent[0]) / 3); // Divide the range into 3 parts
     
-          const depthColorScale = d3.scaleSequential(d3.interpolateBlues).domain(depthExtent);
+          const depthColorScale = d3.scaleSequential(d3.interpolateGreens).domain(depthExtent);
     
           for (let i = 0; i <= 3; i++) {
               const item = legendContent.append("div").style("display", "flex").style("align-items", "center");
