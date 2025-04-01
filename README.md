@@ -8,11 +8,11 @@ The dataset used in this project was obtained from the United States Geological 
 
 The original dataset contained 22 columns, each providing specific details about recorded seismic events. For our analysis, we focused on the most relevant attributes that contribute to understanding earthquake patterns and visualizing them effectively. The key columns used in our project are:
 
-	1.	Magnitude (mag) – Represents the magnitude of the earthquake, indicating its intensity.
-	2.	Latitude & Longitude (latitude, longitude) – Geographical coordinates specifying the earthquake’s exact location on the map.
-	3.	Depth (depth) – The depth at which the earthquake originated, measured in kilometers.
-	4.	Time (time) – The timestamp of the earthquake occurrence in UTC (Coordinated Universal Time).
-	5.	Type (type) – Describes the nature of the seismic activity, indicating the cause of the event (e.g., earthquake, explosion, induced event).
+	1. Magnitude (mag) – Represents the magnitude of the earthquake, indicating its intensity.
+	2. Latitude & Longitude (latitude, longitude) – Geographical coordinates specifying the earthquake’s exact location on the map.
+	3. Depth (depth) – The depth at which the earthquake originated, measured in kilometers.
+	4. Time (time) – The timestamp of the earthquake occurrence in UTC (Coordinated Universal Time).
+	5. Type (type) – Describes the nature of the seismic activity, indicating the cause of the event (e.g., earthquake, explosion, induced event).
 
 Official USGS documentation provides further insights into the dataset’s structure, data collection methodologies, and potential biases in earthquake reporting. By leveraging this dataset, our project aims to provide an interactive and insightful visualization of global earthquake activity, offering valuable information for research, risk assessment, and public awareness.
 
@@ -21,7 +21,19 @@ Link to earthquake catalog: https://earthquake.usgs.gov/earthquakes/search/<br/>
 Link to catalog documentation: https://earthquake.usgs.gov/data/comcat/#type
 
 ## Visualization Components
-[TODO: Explain each view of the data, the GUI, etc. Explain how you can interact with your application, and how the views update in response to these interactions.]
+The project features multiple dynamic views that update based on user interactions, providing an intuitive and engaging experience. The visualization components used are: 
+
+1. Interactive Map
+	The earthquake visualization includes several interactive features to enhance user experience. Users can hover over points to view detailed earthquake information and zoom or pan to explore different regions. A right-side menu allows for changing map styles, while the legend updates automatically based on selected attributes. Animations improve data representation, and a timeline slider enables users to control the displayed earthquake time range. Additionally, an event counter shows the number of currently displayed earthquakes, and a speed control adjusts the rate at which events appear over time.
+
+2. Filter Panel 
+	Click Filter Options to open the control panel, where you can adjust the Magnitude and Depth sliders to filter earthquakes based on their intensity and depth. There's also a Color By option to change the point color representation according to different attributes. Additionally, you can enable or disable Animations, Audio, and Shaking effects to customize the visualization experience.
+
+3. Filter Effects:
+	Changing the magnitude or depth filters updates both the map and the line chart. Additionally, selecting a new Color By option updates the point colors and the legend.
+
+4. Line Chart 
+	Located at the bottom of the screen, the visualization displays a time-series analysis of earthquake events. The X-axis represents Magnitude, Depth, or Duration based on user selection, while the Y-axis shows the number of earthquakes.
 
 ## Design Sketches and Justifications
 [TODO: Include your design sketches and explain the reasoning behind your design choices.]
@@ -63,8 +75,8 @@ https://youtu.be/6tEtrOu1Ifs
 [TODO: Document who on your team worked on which components of the project. For example: ]
 
 ### Iswarya Mikkili
-- Thing 1
-- Thing 2
+- Implemented the color by option filter in the left sidebar which changes the colors of the quakes on the map along with the legend to explain 
+- Added the tooltip which explains the details when mouse hovered over the data points on the map. 
 ### Jasmine Mogadam
 - Thing 1
 - Thing 2
