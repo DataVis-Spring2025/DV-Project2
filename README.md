@@ -45,7 +45,7 @@ Found that in 2009 Europe went from several small magnitude earthquakes, to a lu
 - d3 (automate visualization creation)
 - drawdown (markdown -> html for this page)
 - JQuery (quick dom manipulation and range slider inputs)
-- Leaflet (zoomable map)
+- Leaflet (zoomable map)	
 - Popper (make things pretty)
 
 ### How to run
@@ -54,6 +54,7 @@ Use nginx or a vscode extension like live server to run it locally.
 
 ## Demo Video
 https://youtu.be/6tEtrOu1Ifs
+[![YouTube](http://i.ytimg.com/vi/6tEtrOu1Ifs/hqdefault.jpg)](https://www.youtube.com/watch?v=6tEtrOu1Ifs)
 
 ## Team Contributions
 [TODO: Document who on your team worked on which components of the project. For example: ]
