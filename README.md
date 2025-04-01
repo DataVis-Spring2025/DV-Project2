@@ -6,7 +6,7 @@
 ## Data
 The dataset used in this project was obtained from the United States Geological Survey (USGS) through their Earthquake Catalog. Due to limitations on data retrieval, earthquake records had to be downloaded year by year before being merged into a single comprehensive CSV file covering events from 2004 to 2025.
 
-The original dataset contained 22 columns, each providing specific details about recorded seismic events. For our analysis, we focused on the most relevant attributes that contribute to understanding earthquake patterns and visualizing them effectively.The key columns used in our project are:
+The original dataset contained 22 columns, each providing specific details about recorded seismic events. For our analysis, we focused on the most relevant attributes that contribute to understanding earthquake patterns and visualizing them effectively. The key columns used in our project are:
 
 	1.	Magnitude (mag) – Represents the magnitude of the earthquake, indicating its intensity.
 	2.	Latitude & Longitude (latitude, longitude) – Geographical coordinates specifying the earthquake’s exact location on the map.
@@ -16,8 +16,8 @@ The original dataset contained 22 columns, each providing specific details about
 
 Official USGS documentation provides further insights into the dataset’s structure, data collection methodologies, and potential biases in earthquake reporting. By leveraging this dataset, our project aims to provide an interactive and insightful visualization of global earthquake activity, offering valuable information for research, risk assessment, and public awareness.
 
-Link to data: https://github.com/DataVis-Spring2025/DV-Project2/tree/main/data
-Link to earthquake catalog: https://earthquake.usgs.gov/earthquakes/search/
+Link to data: https://github.com/DataVis-Spring2025/DV-Project2/tree/main/data <br/>
+Link to earthquake catalog: https://earthquake.usgs.gov/earthquakes/search/<br/>
 Link to catalog documentation: https://earthquake.usgs.gov/data/comcat/#type
 
 ## Visualization Components
