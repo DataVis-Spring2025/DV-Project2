@@ -85,10 +85,10 @@ class LeafletMap {
       vis.updateVis();
       vis.addLegend(vis.selectedColorScale);  // Pass selectedColorScale to addLegend
     });
-    vis.magnitudeColorScale = d3.scaleSequential(d3.interpolateGreens)
+    vis.magnitudeColorScale = d3.scaleSequential(d3.interpolateBlues)
       .domain(d3.extent(vis.data, d => d.mag));
 
-    vis.depthColorScale = d3.scaleSequential(d3.interpolateBlues)
+    vis.depthColorScale = d3.scaleSequential(d3.interpolateGreens)
       .domain(d3.extent(vis.data, d => d.depth));
 
     vis.typeColorScale = d3.scaleOrdinal(d3.schemeCategory10)
