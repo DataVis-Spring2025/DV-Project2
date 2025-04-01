@@ -9,6 +9,7 @@ class LeafletMap {
       parentElement: _config.parentElement,
     };
     this.data = _data;
+    this.selectedColorScale = 'type';
     this.initVis();
   }
 
@@ -78,24 +79,30 @@ class LeafletMap {
     L.svg({ clickable: true }).addTo(vis.theMap); // we have to make the svg layer clickable
     vis.overlay = d3.select(vis.theMap.getPanes().overlayPane);
     vis.svg = vis.overlay.select("svg").attr("pointer-events", "auto");
-    const colorScale = d3.scaleSequential(d3.interpolateBlues)
-    .domain(d3.extent(vis.data, d => d.mag));
+    d3.select("#color-scale-select").on("change", function () {
+      vis.selectedColorScale = this.value;  // Capture selected color scale
+      console.log('Color scale selected:', this.value);
+      vis.updateVis();
+      vis.addLegend(vis.selectedColorScale);  // Pass selectedColorScale to addLegend
+    });
+    vis.magnitudeColorScale = d3.scaleSequential(d3.interpolateGreens)
+      .domain(d3.extent(vis.data, d => d.mag));
 
-    // Magnitude color scale
-    const magnitudes = vis.data.map((d) => +d.mag);
-    vis.magnitudeColorScale = d3
-      .scaleLinear()
-      .domain(d3.extent(magnitudes))
-      .range(["#e8f4f8", "#000080"]);
+    vis.depthColorScale = d3.scaleSequential(d3.interpolateBlues)
+      .domain(d3.extent(vis.data, d => d.depth));
+
+    vis.typeColorScale = d3.scaleOrdinal(d3.schemeCategory10)
+      .domain([...new Set(vis.data.map(d => d.type))]);  // Unique types
+
+
+    
 
     //these are the city locations, displayed as a set of dots
     vis.Dots = vis.svg
       .selectAll("circle")
       .data(vis.data)
       .join("circle")
-      .attr("fill", (d) => {
-        return vis.magnitudeColorScale(+d.mag);
-      })
+      .attr("fill", d => vis.getColor(d))
       .attr("stroke", "black")
       //Leaflet has to take control of projecting points.
       //Here we are feeding the latitude and longitude coordinates to
@@ -178,7 +185,7 @@ class LeafletMap {
       .selectAll("circle")
       .data(filteredData)
       .join("circle")
-      .attr("fill", (d) => vis.magnitudeColorScale(+d.mag))
+      .attr("fill", d => vis.getColor(d))
       .attr("stroke", "black")
       .attr(
         "cx",
@@ -196,6 +203,7 @@ class LeafletMap {
           .style("z-index", 1000000)
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY + 10 + "px")
+      
 
         const formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S");
 
@@ -223,8 +231,100 @@ class LeafletMap {
       .ease(d3.easeLinear)
       .attr("r", (d) => this.sidebar.animationsEnabled ? this.calculateScaledRadius(d, zoomLevel) : this.calculateConstantRadius()) // Use constant radius if animations are disabled
       .style("opacity", (d) => this.sidebar.animationsEnabled ? this.calculateOpacity(d) : 1) // Full opacity if animations are disabled
+      vis.addLegend(vis.selectedColorScale);
+    }
+  getColor(d) {
+    let vis = this;
+    if (vis.selectedColorScale === "mag") {
+      return vis.magnitudeColorScale(Math.round(d.mag));
+    } else if (vis.selectedColorScale === "depth") {
+      return vis.depthColorScale(d.depth);
+    } else {
+      return vis.typeColorScale(d.type);
+    }
   }
 
+  
+    addLegend(selectedColorScale) {
+      let vis = this;
+      const legendContent = d3.select('#legend');
+      legendContent.html(""); // Clear previous content
+      
+      if (selectedColorScale === 'mag') {
+        // Extract unique magnitude values, round them, and sort them
+const uniqueMagnitudes = [...new Set(vis.data.map(d => Math.round(d.mag)))].sort((a, b) => a - b);
+ console.log(uniqueMagnitudes);
+// Define number of colors
+const numColors = uniqueMagnitudes.length;
+
+// Generate dynamic color range from d3.interpolateGreens
+const colorRange = d3.quantize(d3.interpolateGreens, numColors);
+console.log(numColors);
+
+// Define color scale using dynamically generated domain and range
+const magnitudeColorScale = d3.scaleLinear()
+    .domain(d3.range(
+        d3.min(uniqueMagnitudes), 
+        d3.max(uniqueMagnitudes), 
+        (d3.max(uniqueMagnitudes) - d3.min(uniqueMagnitudes)) / (numColors - 1)
+    )) 
+    .range(colorRange) // Assign dynamically generated colors
+    .interpolate(d3.interpolateRgb);
+
+        // Generate legend items for each unique magnitude
+        uniqueMagnitudes.forEach(mag => {
+            const item = legendContent.append("div").style("display", "flex").style("align-items", "center");
+
+            item.append("div")
+                .style("width", "10px")
+                .style("height", "10px")
+                .style("margin-right", "5px")
+                .style("background", magnitudeColorScale(mag));
+
+            item.append("span").text(`Magnitude: ${mag}`);
+        });
+      }
+    
+      
+    
+       else if (selectedColorScale === 'depth') {
+          // Dynamically calculate the depth extent based on the data
+          const depthValues = vis.data.map(d => +d.depth).filter(d => !isNaN(d));
+          const depthExtent = d3.extent(depthValues);
+          const depthRange = Math.floor((depthExtent[1] - depthExtent[0]) / 3); // Divide the range into 3 parts
+    
+          const depthColorScale = d3.scaleSequential(d3.interpolateBlues).domain(depthExtent);
+    
+          for (let i = 0; i <= 3; i++) {
+              const item = legendContent.append("div").style("display", "flex").style("align-items", "center");
+              const color = depthColorScale(depthExtent[0] + (depthRange * i));
+    
+              item.append("div")
+                  .style("width", "10px")
+                  .style("height", "10px")
+                  .style("margin-right", "5px")
+                  .style("background", color);
+              item.append("span").text(`${depthExtent[0] + (depthRange * i)} - ${depthExtent[0] + (depthRange * (i + 1))} km`);
+          }
+    
+      } else if (selectedColorScale === 'type') {
+          // Handle 'type' dynamically based on unique types in the data
+          const types = [...new Set(vis.data.map(d => d.type))];
+          vis.colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(types);
+    
+          types.forEach((type) => {
+              const item = legendContent.append("div").style("display", "flex").style("align-items", "center");
+              item.append("div")
+                  .style("width", "10px")
+                  .style("height", "10px")
+                  .style("margin-right", "5px")
+                  .style("background", vis.colorScale(type));
+              item.append("span").text(type);
+          });
+      } else {
+          console.log('Unknown color scale selected:', selectedColorScale);
+      }
+  }
   calculateScaledRadius(d, zoomLevel) {
     const baseRadius = +d.mag; // Base radius proportional to magnitude
     const scaleFactor = Math.pow(2, zoomLevel - 2); // Scale factor increases with zoom level

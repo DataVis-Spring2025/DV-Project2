@@ -409,3 +409,13 @@ input[type="text"]::-moz-range-thumb {
   color: #555;
   font-weight: 600;
 }
+#legend {
+  position: absolute;
+  top:320px;
+  right:20px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  z-index:2500;
+}
