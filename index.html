@@ -51,10 +51,18 @@
         <button id="toggleSidebar" class="btn btn-primary me-md-2" style="margin-right: 10px; z-index: 2000; height:40px">Filter Options</button>
     </div>
 
-    <div id="sidebar" style="z-index: 2000;"></div>
+    <div id="sidebar" style="z-index: 2000;">
+        <label for="color-scale-select"><b>Color By:</b></label>
+        <select id="color-scale-select">
+        <option value="type">Type</option>
+        <option value="depth">Depth</option>
+        <option value="mag">Magnitude</option>
+      </select>
+    </div>
 
     
     <div id="timeline"></div>
+    <div id="legend"></div>
     
     <div id="level3">
         <select id="attribute-select">
