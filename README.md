@@ -81,8 +81,8 @@ https://youtu.be/6tEtrOu1Ifs
 - Thing 1
 - Thing 2
 ### Rashi Loni
-- thing 1
-- thing 2
+- Implemented level 3 of the project by creating a visualization to help understand frequencies of earthquakes by depth, magnitude, and duration.
+- Filmed the demo video and researched to find a formula to estimate duration.
 ### Samraysh Pellakur
 - Implemented Range Sliders for interactive filtering of earthquakes based on magnitude and depth, allowing users to refine their data view dynamically.
 - Enhanced Timeline Animation with visual and audio effects, along with dedicated control buttons, to create a more immersive and engaging experience while exploring seismic activity over time.
