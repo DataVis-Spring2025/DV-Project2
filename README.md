@@ -53,7 +53,7 @@ Use nginx or a vscode extension like live server to run it locally.
 [TODO: Describe your process. What libraries did you use? How did you structure your code? How can someone access and run it? Include a link to your code and the live application (if deployed).]
 
 ## Demo Video
-[TODO: Include a 2-3 minute demo video showing your application in action. Provide a link to the video.]
+https://youtu.be/6tEtrOu1Ifs
 
 ## Team Contributions
 [TODO: Document who on your team worked on which components of the project. For example: ]
