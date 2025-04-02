@@ -81,7 +81,6 @@ https://youtu.be/6tEtrOu1Ifs
 [![YouTube](http://i.ytimg.com/vi/6tEtrOu1Ifs/hqdefault.jpg)](https://www.youtube.com/watch?v=6tEtrOu1Ifs)
 
 ## Team Contributions
-[TODO: Document who on your team worked on which components of the project. For example: ]
 
 ### Iswarya Mikkili
 - Implemented the color by option filter in the left sidebar which changes the colors of the quakes on the map along with the legend to explain 
@@ -96,5 +95,5 @@ https://youtu.be/6tEtrOu1Ifs
 - Implemented Range Sliders for interactive filtering of earthquakes based on magnitude and depth, allowing users to refine their data view dynamically.
 - Enhanced Timeline Animation with visual and audio effects, along with dedicated control buttons, to create a more immersive and engaging experience while exploring seismic activity over time.
 ### Tulasi Rama Raju Chittiraju
-- Thing 1
-- Thing 2
+- Implemented a drop down that lists the different basemap options for the map background, enabling more customization for the map visual.
+- Added a side panel menu bar to house the basemap selection options and to enlist the data sources and references. 
