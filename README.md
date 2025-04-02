@@ -50,8 +50,6 @@ Before the month of march in 2011, there were very few to almost no earthquakes 
 
 The line chart reveals a distinct pattern in earthquake depths. It is noticeable that, regardless of magnitude, most earthquakes occur at a depth of around 10 km, with a secondary peak of around 30 km. This suggests that the tectonic movements usually happen in earth's upper crust.
 
-[TODO: Present some findings you arrive at with your application.]
-
 ## Process
 ### Development
 - Create Miro Card
