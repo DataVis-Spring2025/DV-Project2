@@ -26,16 +26,16 @@ Link to catalog documentation: https://earthquake.usgs.gov/data/comcat/#type
 ## Visualization Components
 The project features multiple dynamic views that update based on user interactions, providing an intuitive and engaging experience. The visualization components used are: 
 
-1. Interactive Map
+1. Interactive Map:<br/>
 	The earthquake visualization includes several interactive features to enhance user experience. Users can hover over points to view detailed earthquake information and zoom or pan to explore different regions. A right-side menu allows for changing map styles, while the legend updates automatically based on selected attributes. Animations improve data representation, and a timeline slider enables users to control the displayed earthquake time range. Additionally, an event counter shows the number of currently displayed earthquakes, and a speed control adjusts the rate at which events appear over time.
 
-2. Filter Panel 
+2. Filter Panel:<br/> 
 	Click Filter Options to open the control panel, where you can adjust the Magnitude and Depth sliders to filter earthquakes based on their intensity and depth. There's also a Color By option to change the point color representation according to different attributes. Additionally, you can enable or disable Animations, Audio, and Shaking effects to customize the visualization experience.
 
-3. Filter Effects:
+3. Filter Effects:<br/>
 	Changing the magnitude or depth filters updates both the map and the line chart. Additionally, selecting a new Color By option updates the point colors and the legend.
 
-4. Line Chart 
+4. Line Chart: <br/>
 	Located at the bottom of the screen, the visualization displays a time-series analysis of earthquake events. The X-axis represents Magnitude, Depth, or Duration based on user selection, while the Y-axis shows the number of earthquakes.
 
 ## Design Sketches and Justifications
@@ -106,6 +106,7 @@ https://youtu.be/6tEtrOu1Ifs
 - Implemented level 3 of the project by creating a visualization to help understand frequencies of earthquakes by depth, magnitude, and duration.
 - Recorded the demo video and researched to find a formula to estimate duration.
 ### Samraysh Pellakur
+- Downloaded the dataset and organised them in a fashion that made accessing them easy
 - Implemented Range Sliders for interactive filtering of earthquakes based on magnitude and depth, allowing users to refine their data view dynamically.
 - Enhanced Timeline Animation with visual and audio effects, along with dedicated control buttons, to create a more immersive and engaging experience while exploring seismic activity over time.
 ### Tulasi Rama Raju Chittiraju
