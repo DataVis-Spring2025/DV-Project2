@@ -42,7 +42,13 @@ The project features multiple dynamic views that update based on user interactio
 [TODO: Include your design sketches and explain the reasoning behind your design choices.]
 
 ## Discoveries
-Found that in 2009 Europe went from several small magnitude earthquakes, to a lul, to suddenly a handful of very high magnitude earthquakes.
+While the seismic activities appear to be distributed relatively uniformly across all the tectonic plates, a clear pattern emerges for major earthquakes. Earthquakes with magnitudes above 6.0 occur more frequently on the Pacific, Australian, and South American Plates, indicating that these regions experience more severe seismic activity than the others.
+
+Found that in 2009 Europe initially went from several small magnitude earthquakes, to a notable drop in activity, to suddenly a handful of several high-magnitude earthquakes.
+
+Before the month of march in 2011, there were very few to almost no earthquakes recorded above 5.0 magnitude around Japan. However, starting from march, we observed a dramatic spike in activity, with hundreds of earthquakes originating from the east coast of Japan. This aligns perfectly with the 2011 Tohoku earthquake, an event that triggered hundreds of aftershocks/quakes. This visualization highlights how major earthquakes can lead to prolonged seismic disturbances in affected regions.
+
+The line chart reveals a distinct pattern in earthquake depths. It is noticeable that, regardless of magnitude, most earthquakes occur at a depth of around 10 km, with a secondary peak of around 30 km. This suggests that the tectonic movements usually happen in earth's upper crust.
 
 [TODO: Present some findings you arrive at with your application.]
 
