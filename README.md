@@ -93,7 +93,14 @@ https://youtu.be/6tEtrOu1Ifs
 
 [![YouTube](http://i.ytimg.com/vi/6tEtrOu1Ifs/hqdefault.jpg)](https://www.youtube.com/watch?v=6tEtrOu1Ifs)
 
-## Future 
+## Future Improvements
+Can add static images of the basemaps to the options list while selecting different basemaps from the menu panel.
+
+Add a jump to date option so that the timeline jumps to a specific date if required
+
+Making the legend more interactive by enabling the option to select any feature to highlight those specific features in the map.
+
+Improve the data loading speed to load the site faster
 
 ## Team Contributions
 
