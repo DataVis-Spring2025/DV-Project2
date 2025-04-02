@@ -84,7 +84,7 @@ The line chart reveals a distinct pattern in earthquake depths. It is noticeable
 
 ### How to run
 Use nginx or a vscode extension like live server to run it locally.
-You can also access it by visiting the hosted site - <br/> https://dv-2025-project2.netlify.app/
+You can also access it by visiting the hosted site <br/> Link to site: https://dv-2025-project2.netlify.app/
 
 ## Demo Video
 https://youtu.be/6tEtrOu1Ifs
