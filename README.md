@@ -16,6 +16,9 @@ The original dataset contained 22 columns, each providing specific details about
 
 Official USGS documentation provides further insights into the dataset’s structure, data collection methodologies, and potential biases in earthquake reporting. By leveraging this dataset, our project aims to provide an interactive and insightful visualization of global earthquake activity, offering valuable information for research, risk assessment, and public awareness.
 
+Estimated duration: The earthquake duration was estimated from the magnitude and the rms columns. The formula to calculate duration was derived from the emprical formula that estimated magnitude from the duration and amplitude (M =  -0.87 + 2.00 log(r) + 0.0035 A). We took this formula and rearranged it to calculate duration from magnitude. The resulting formula used in the code is d.duration = Math.pow(10, (0.5 * d.mag - 1.5)) * d.rms. The derived formula comes from the paper "A Method of Estimating Magnitude of Local Earthquakes From Signal Duration" by Lee et al. (1972).
+https://pubs.usgs.gov/of/1972/0223/report.pdf
+
 Link to data: https://github.com/DataVis-Spring2025/DV-Project2/tree/main/data <br/>
 Link to earthquake catalog: https://earthquake.usgs.gov/earthquakes/search/<br/>
 Link to catalog documentation: https://earthquake.usgs.gov/data/comcat/#type
@@ -50,9 +53,15 @@ We didn't make a sketch for every feature, with most sketches being made in the 
 *By Jasmine, a revision suggestion for Ishwarya's work on the color by dropdown input in the sidebar. Originally there were dots for each color for magnitude instead of a gradient legend. Dots work well for the types of category, but a gradient might be more helpful for quantitative information. This was never implemented, and all color by options use dot legends.*
 
 ## Discoveries
-Found that in 2009 Europe went from several small magnitude earthquakes, to a lul, to suddenly a handful of very high magnitude earthquakes.
+While the seismic activities appear to be distributed relatively uniformly across all the tectonic plates, a clear pattern emerges for major earthquakes. Earthquakes with magnitudes above 6.0 occur more frequently on the Pacific, Australian, and South American Plates, indicating that these regions experience more severe seismic activity than the others.
 
-[TODO: Present some findings you arrive at with your application.]
+Found that in 2009 Europe initially went from several small magnitude earthquakes, to a notable drop in activity, to suddenly a handful of several high-magnitude earthquakes.
+
+It can be seen that the Untied States has experienced a notable number of earthquakes caused by different geological factors, such as rock bursts and explosions. These types of activities have been more prevalent in the USA compared to other parts of the world.
+
+Before the month of march in 2011, there were very few to almost no earthquakes recorded above 5.0 magnitude around Japan. However, starting from march, we observed a dramatic spike in activity, with hundreds of earthquakes originating from the east coast of Japan. This aligns perfectly with the 2011 Tohoku earthquake, an event that triggered hundreds of aftershocks/quakes. This visualization highlights how major earthquakes can lead to prolonged seismic disturbances in affected regions.
+
+The line chart reveals a distinct pattern in earthquake depths. It is noticeable that, regardless of magnitude, most earthquakes occur at a depth of around 10 km, with a secondary peak of around 30 km. This suggests that the tectonic movements usually happen in earth's upper crust.
 
 ## Process
 ### Development
@@ -95,10 +104,10 @@ https://youtu.be/6tEtrOu1Ifs
 - Project Management
 ### Rashi Loni
 - Implemented level 3 of the project by creating a visualization to help understand frequencies of earthquakes by depth, magnitude, and duration.
-- Filmed the demo video and researched to find a formula to estimate duration.
+- Recorded the demo video and researched to find a formula to estimate duration.
 ### Samraysh Pellakur
 - Implemented Range Sliders for interactive filtering of earthquakes based on magnitude and depth, allowing users to refine their data view dynamically.
 - Enhanced Timeline Animation with visual and audio effects, along with dedicated control buttons, to create a more immersive and engaging experience while exploring seismic activity over time.
 ### Tulasi Rama Raju Chittiraju
-- Thing 1
-- Thing 2
+- Implemented a drop down that lists the different basemap options for the map background, enabling more customization for the map visual.
+- Added a side panel menu bar to house the basemap selection options and to enlist the data sources and references. 
