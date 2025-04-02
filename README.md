@@ -94,7 +94,7 @@ https://youtu.be/6tEtrOu1Ifs
 [![YouTube](http://i.ytimg.com/vi/6tEtrOu1Ifs/hqdefault.jpg)](https://www.youtube.com/watch?v=6tEtrOu1Ifs)
 
 ## Future Improvements
-- Can add static images of the base maps to the options list while selecting different base maps from the menu panel.
+- Add static images of the base maps to the options list while selecting different base maps from the menu panel.
 
 - Add a jump-to-date option so that the timeline jumps to a specific date if required.
 
