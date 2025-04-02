@@ -36,7 +36,18 @@ The project features multiple dynamic views that update based on user interactio
 	Located at the bottom of the screen, the visualization displays a time-series analysis of earthquake events. The X-axis represents Magnitude, Depth, or Duration based on user selection, while the Y-axis shows the number of earthquakes.
 
 ## Design Sketches and Justifications
-[TODO: Include your design sketches and explain the reasoning behind your design choices.]
+We didn't make a sketch for every feature, with most sketches being made in the first week of work.
+![Sketch 1: Interactive Map](images/documentation/sketch-1.jpg)
+*By Jasmine, this sketch shows the placement for the timeline in relation to the leaflet map. It includes the event count at the bottom, a play button for the timeline animation, and darker divs for dragging and extending the time range.*
+
+![Sketch 2: Filter Panel](images/documentation/sketch-2.jpg)
+*By Jasmine, a general sketch for the vibe of the application. Areas drawn without much thought into what would go into them, focusing on composition rather than functionality.*
+
+![Sketch 3: Line Chart](images/documentation/sketch-3.png)
+*By Rashi, the first draft of the visualisation's bottom histogram. Originally planned to be a bar chart with a dropdown x-axis label.*
+
+![Sketch 4: Timeline Animation](images/documentation/sketch-4.jpg)
+*By Jasmine, a revision suggestion for Ishwarya's work on the color by dropdown input in the sidebar. Originally there were dots for each color for magnitude instead of a gradient legend. Dots work well for the types of category, but a gradient might be more helpful for quantitative information. This was never implemented, and all color by options use dot legends.*
 
 ## Discoveries
 Found that in 2009 Europe went from several small magnitude earthquakes, to a lul, to suddenly a handful of very high magnitude earthquakes.
@@ -72,14 +83,16 @@ https://youtu.be/6tEtrOu1Ifs
 [![YouTube](http://i.ytimg.com/vi/6tEtrOu1Ifs/hqdefault.jpg)](https://www.youtube.com/watch?v=6tEtrOu1Ifs)
 
 ## Team Contributions
-[TODO: Document who on your team worked on which components of the project. For example: ]
 
 ### Iswarya Mikkili
 - Implemented the color by option filter in the left sidebar which changes the colors of the quakes on the map along with the legend to explain 
 - Added the tooltip which explains the details when mouse hovered over the data points on the map. 
 ### Jasmine Mogadam
-- Thing 1
-- Thing 2
+- Implemented timeline bar selector, specifically: play button, speed up [x1,x2,x3], and time metadata (specific date range, event count, days/second)
+- Added a loading bar to enhance user experience while waiting for the map to draw
+- Animated dots as they are filtered by the timeline
+- Created filtering framework to make adding new filters easy
+- Project Management
 ### Rashi Loni
 - Implemented level 3 of the project by creating a visualization to help understand frequencies of earthquakes by depth, magnitude, and duration.
 - Filmed the demo video and researched to find a formula to estimate duration.
