@@ -46,6 +46,8 @@ While the seismic activities appear to be distributed relatively uniformly acros
 
 Found that in 2009 Europe initially went from several small magnitude earthquakes, to a notable drop in activity, to suddenly a handful of several high-magnitude earthquakes.
 
+It can be seen that the USA has experienced a notable number of earthquakes caused by different geological factors, such as rock bursts and explosions. These types of activities have been more prevalent in the USA compared to other parts of the world.
+
 Before the month of march in 2011, there were very few to almost no earthquakes recorded above 5.0 magnitude around Japan. However, starting from march, we observed a dramatic spike in activity, with hundreds of earthquakes originating from the east coast of Japan. This aligns perfectly with the 2011 Tohoku earthquake, an event that triggered hundreds of aftershocks/quakes. This visualization highlights how major earthquakes can lead to prolonged seismic disturbances in affected regions.
 
 The line chart reveals a distinct pattern in earthquake depths. It is noticeable that, regardless of magnitude, most earthquakes occur at a depth of around 10 km, with a secondary peak of around 30 km. This suggests that the tectonic movements usually happen in earth's upper crust.
