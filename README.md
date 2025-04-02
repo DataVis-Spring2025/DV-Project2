@@ -16,7 +16,7 @@ The original dataset contained 22 columns, each providing specific details about
 
 Official USGS documentation provides further insights into the dataset’s structure, data collection methodologies, and potential biases in earthquake reporting. By leveraging this dataset, our project aims to provide an interactive and insightful visualization of global earthquake activity, offering valuable information for research, risk assessment, and public awareness.
 
-Estimated duration: The earthquake duration was estimated from the magnitude and the rms columns. The formula to calculate duration was derived from the emprical formula that estimated magnitude from the duration and amplitude (M =  -0.87 + 2.00 log(r) + 0.0035 A). We took this formula and rearranged it to calculate duration from magnitude. The resulting formula used in the code is d.duration = Math.pow(10, (0.5 * d.mag - 1.5)) * d.rms. The derived formula comes from the paper "A METHOD OF ESTIMATING MAGNITUDE OF LOCAL EARTHQUAKES FROM SIGNAL DURATION" by Lee et al. (1972).
+Estimated duration: The earthquake duration was estimated from the magnitude and the rms columns. The formula to calculate duration was derived from the emprical formula that estimated magnitude from the duration and amplitude (M =  -0.87 + 2.00 log(r) + 0.0035 A). We took this formula and rearranged it to calculate duration from magnitude. The resulting formula used in the code is d.duration = Math.pow(10, (0.5 * d.mag - 1.5)) * d.rms. The derived formula comes from the paper "A Method of Estimating Magnitude of Local Earthquakes From Signal Duration" by Lee et al. (1972).
 https://pubs.usgs.gov/of/1972/0223/report.pdf
 
 Link to data: https://github.com/DataVis-Spring2025/DV-Project2/tree/main/data <br/>
