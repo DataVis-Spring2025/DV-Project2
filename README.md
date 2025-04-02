@@ -21,9 +21,9 @@ The earthquake duration was estimated from the magnitude and the rms columns. Th
 
 <i>Credits: https://pubs.usgs.gov/of/1972/0223/report.pdf</i>
 
-Link to data: https://github.com/DataVis-Spring2025/DV-Project2/tree/main/data <br/>
-Link to earthquake catalog: https://earthquake.usgs.gov/earthquakes/search/<br/>
-Link to catalog documentation: https://earthquake.usgs.gov/data/comcat/#type
+<i>Link to data: https://github.com/DataVis-Spring2025/DV-Project2/tree/main/data </i> <br/>
+<i>Link to earthquake catalog: https://earthquake.usgs.gov/earthquakes/search/ </i><br/>
+<i>Link to catalog documentation: https://earthquake.usgs.gov/data/comcat/#type </i>
 
 ## Visualization Components
 The project features multiple dynamic views that update based on user interactions, providing an intuitive and engaging experience. The visualization components used are: 
@@ -84,10 +84,10 @@ The line chart reveals a distinct pattern in earthquake depths. It is noticeable
 
 ### How to run
 Use nginx or a vscode extension like live server to run it locally.
-You can also access it by visiting the hosted site <br/> Link to site: https://dv-2025-project2.netlify.app/
+You can also access it by visiting the hosted site <br/> <i>Link to site: https://dv-2025-project2.netlify.app/ </i>
 
 ## Demo Video
-https://youtu.be/6tEtrOu1Ifs
+<i> Link to Youtube Demo Video: https://youtu.be/6tEtrOu1Ifs </i>
 
 
 
